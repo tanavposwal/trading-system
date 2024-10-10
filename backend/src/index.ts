@@ -47,7 +47,7 @@ const users: User[] = [
     id: "1",
     name: "Jack Spparow",
     balances: {
-      GOOGLE: 0,
+      GOOGLE: 5,
       USD: 50000,
     },
   },
@@ -56,6 +56,14 @@ const users: User[] = [
     name: "Harry Potter",
     balances: {
       GOOGLE: 10,
+      USD: 50000,
+    },
+  },
+  {
+    id: "3",
+    name: "Tony Stark",
+    balances: {
+      GOOGLE: 15,
       USD: 50000,
     },
   },
