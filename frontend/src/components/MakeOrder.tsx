@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MakeOrder = () => {
     const [formData, setFormData] = useState({
@@ -26,55 +26,55 @@ const MakeOrder = () => {
     };
   
     return (
-      <div className="m-5 flex flex-col items-center justify-center gap-3">
+      <div className="m-5 flex flex-col items-center justify-center gap-3 w-72">
         <p className="text-3xl font-bold">Make order</p>
         <form onSubmit={handleSubmit} className="space-y-4 border rounded-lg p-3">
           <div>
-            <label className="block mb-1">Side:</label>
+            <label className="block mb-1 font-semibold">Side:</label>
             <select
               name="side"
               value={formData.side}
               onChange={(e) => setFormData({...formData, side: e.target.value})}
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border rounded"
             >
               <option value="bid">Bid</option>
               <option value="ask">Ask</option>
             </select>
           </div>
           <div>
-            <label className="block mb-1">Price:</label>
+            <label className="block mb-1 font-semibold">Price:</label>
             <input
               type="number"
               name="price"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
-              className="w-full p-2 border rounded"
+              className="w-full px-2 py-1 border rounded"
               required
             />
           </div>
           <div>
-            <label className="block mb-1">Quantity:</label>
+            <label className="block mb-1 font-semibold">Quantity:</label>
             <input
               type="number"
               name="quantity"
               value={formData.quantity}
               onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-              className="w-full p-2 border rounded"
+              className="w-full px-2 py-1 border rounded"
               required
             />
           </div>
           <div>
-            <label className="block mb-1">User ID:</label>
+            <label className="block mb-1 font-semibold">User ID:</label>
             <input
               type="text"
               name="userId"
               value={formData.userId}
               onChange={(e) => setFormData({...formData, userId: e.target.value})}
-              className="w-full p-2 border rounded"
+              className="w-full px-2 py-1 border rounded"
               required
             />
           </div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
             Submit Order
           </button>
         </form>
