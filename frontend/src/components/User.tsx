@@ -13,23 +13,26 @@ const UserComponent = () => {
 
   return (
     <div className="m-5 flex flex-col items-center justify-center gap-3">
-      <p className="text-3xl font-bold">User</p>
-      <div className="border flex w-fit rounded-lg overflow-hidden">
-      <table>
+      <p className="text-xl font-bold">User</p>
+
+      <table className="w-full text-sm text-left rtl:text-right text-gray-600">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
-          <th className="px-4 py-2">Name</th>
-          <th className="px-4 py-2">Portfolio</th>
-          <th className="px-4 py-2">Balance</th>
+          <th className="px-6 py-3">Name</th>
+          <th className="px-6 py-3">Portfolio</th>
+          <th className="px-6 py-3">Balance</th>
         </tr>
+      </thead>
+      <tbody>
         {users.map(user => (
-          <tr>
-            <td className="text-center ">{user.name}</td>
-            <td className="text-center">{user.balances.GOOGLE}</td>
-            <td className="text-center">${user.balances.USD}</td>
+          <tr className="bg-white border-b">
+            <td className="px-6 py-4">{user.name}</td>
+            <td className="px-6 py-4">{user.balances.GOOGLE}</td>
+            <td className="px-6 py-4">${user.balances.USD}</td>
           </tr>
         ))}
+      </tbody>
       </table>
-      </div>
     </div>
   );
 };

@@ -26,11 +26,11 @@ const MakeOrder = () => {
     };
   
     return (
-      <div className="m-5 flex flex-col items-center justify-center gap-3 w-72">
-        <p className="text-3xl font-bold">Make order</p>
-        <form onSubmit={handleSubmit} className="space-y-4 border rounded-lg p-3">
+      <div className="flex flex-col items-center justify-center gap-3 w-full">
+        <p className="text-xl font-bold">Make order</p>
+        <form onSubmit={handleSubmit} className="space-y-2 rounded-lg p-3">
           <div>
-            <label className="block mb-1 font-semibold">Side:</label>
+            <label className="block mb-1 font-semibold text-xs">Side:</label>
             <select
               name="side"
               value={formData.side}
@@ -42,7 +42,7 @@ const MakeOrder = () => {
             </select>
           </div>
           <div>
-            <label className="block mb-1 font-semibold">Price:</label>
+            <label className="block mb-1 font-semibold text-xs">Price:</label>
             <input
               type="number"
               name="price"
@@ -53,7 +53,7 @@ const MakeOrder = () => {
             />
           </div>
           <div>
-            <label className="block mb-1 font-semibold">Quantity:</label>
+            <label className="block mb-1 font-semibold text-xs">Quantity:</label>
             <input
               type="number"
               name="quantity"
@@ -64,7 +64,7 @@ const MakeOrder = () => {
             />
           </div>
           <div>
-            <label className="block mb-1 font-semibold">User ID:</label>
+            <label className="block mb-1 font-semibold text-xs">User ID:</label>
             <input
               type="text"
               name="userId"

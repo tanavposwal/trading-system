@@ -16,11 +16,11 @@ const Quote = () => {
 
   return (
     <div className="m-5 flex items-center justify-center gap-3 border rounded-lg shadow p-1">
-      <h1 className="text-xl font-bold">Quote</h1>
+      <h1 className="text-md font-bold">Quote</h1>
       <div className="flex items-center justify-center gap-2">
-      <p className="text-xl font-bold">${msg}</p>
+      <p className="text-xl font-semibold">${msg}</p>
       <button
-      className="hover:bg-black/10 px-3 py-2 rounded-lg transition-colors text-sm"
+      className="hover:bg-black/5 px-3 py-2 rounded-lg transition-colors text-sm"
         onClick={() => {
           axios.get("http://localhost:3000/quote").then((res) => {
             if (res.data.ok) {

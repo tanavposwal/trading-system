@@ -20,7 +20,7 @@ const Depth2 = () => {
     };
 
     fetchOrderBook();
-    const interval = setInterval(fetchOrderBook, 5000); // Refresh every 5 seconds
+    const interval = setInterval(fetchOrderBook, 1000); // Refresh every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -34,20 +34,20 @@ const Depth2 = () => {
 
   const renderOrderRow = (order: AnonyOrder, side: "ask" | "bid") => {
     const percentage = (order.size / maxOrderSize) * 100;
-    const bgColor = side === "ask" ? "bg-red-500" : "bg-green-500";
+    const bgColor = side === "ask" ? "bg-red-200" : "bg-green-200";
     const textColor = side === "ask" ? "text-red-600" : "text-green-600";
 
     return (
-      <tr key={order.price} className={`relative ${side === "ask" ? "bg-red-100" : "bg-green-100"}`}>
+      <tr key={order.price} className={`relative bg-white border-b text-sm ${side === "ask" ? "bg-red-100" : "bg-green-100"}`}>
         {side === "ask" ? (
           <>
-            <td className="text-center">{order.size}</td>
-            <td className={`text-center ${textColor}`}>${order.price}</td>
+            <td className="px-6 py-4">{order.size}</td>
+            <td className={`px-6 py-4 ${textColor}`}>${order.price}</td>
           </>
         ) : (
           <>
-            <td className={`text-center ${textColor}`}>${order.price}</td>
-            <td className="text-center">{order.size}</td>
+            <td className={`px-6 py-4 ${textColor}`}>${order.price}</td>
+            <td className="px-6 py-4">{order.size}</td>
           </>
         )}
         <td className="w-32">
@@ -63,15 +63,16 @@ const Depth2 = () => {
   if (loading) return <div className="text-center py-4">Loading order book...</div>;
 
   return (
-    <div className="m-5 flex flex-col items-center justify-center gap-3">
-      <p className="text-3xl font-bold">Depth</p>
-      <div className="flex justify-center items-start border w-fit rounded-lg overflow-hidden">
+    <div className="m-5 flex flex-col items-center justify-center">
+      <p className="text-xl font-bold">Depth</p>
+      <caption className="text-xs text-gray-500 mb-3">refresh every 1 seconds</caption>
+      <div className="flex justify-center items-start w-full">
         {/* Sell Orders (Asks) */}
-        <table className="border-r">
+        <table className="">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2">Size</th>
-              <th className="px-4 py-2">Sell (Ask)</th>
+            <tr className="text-xs text-gray-700 uppercase bg-gray-50">
+              <th className="px-6 py-3">Size</th>
+              <th className="px-6 py-3">Sell (Ask)</th>
               <th className="w-32"></th>
             </tr>
           </thead>
@@ -85,9 +86,9 @@ const Depth2 = () => {
         {/* Buy Orders (Bids) */}
         <table>
           <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2">Buy (Bid)</th>
-              <th className="px-4 py-2">Size</th>
+            <tr className="text-xs text-gray-700 uppercase bg-gray-50">
+              <th className="px-6 py-3">Buy (Bid)</th>
+              <th className="px-6 py-3">Size</th>
               <th className="w-32"></th>
             </tr>
           </thead>
