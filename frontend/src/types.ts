@@ -1,5 +1,6 @@
 export interface Balances {
-  [key: string]: number;
+  stock: number;
+  cash: number;
 }
 
 export interface User {

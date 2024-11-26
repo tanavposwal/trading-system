@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Order, Orderbook, User, UserOrder } from "./types";
+import * as fs from "fs";
 
 export const app = express();
 app.use(cors());
@@ -17,54 +18,30 @@ const orderbook: Orderbook = {
 const bids: Order[] = [];
 const asks: Order[] = [];
 
-const users: User[] = [
-  {
-    id: "1",
-    name: "Jack Spparow",
-    balances: {
-      stock: 5,
-      cash: 50000,
-    },
-  },
-  {
-    id: "2",
-    name: "Harry Potter",
-    balances: {
-      stock: 10,
-      cash: 50000,
-    },
-  },
-  {
-    id: "3",
-    name: "Tony Stark",
-    balances: {
-      stock: 15,
-      cash: 50000,
-    },
-  },
-];
-
+const jsonData = fs.readFileSync('./data/users.json', 'utf-8')
+const users: User[] = JSON.parse(jsonData)
 
 // Place a limit order
 app.post("/api/makeorder", (req: Request, res: Response) => {
-  const {side, price, quantity, userId}: UserOrder = req.body;
-
+  const { side, price, quantity, userId }: UserOrder = req.body;
   // check for enough balance
   if (side == "bid") {
-    const user = users.find((us) => us.id == userId)
+    const user = users.find((us) => us.id == userId);
     if (user == null || user.balances.cash < price) {
       res.json({
         ok: false,
         msg: `⚠️ Not enough cash.`,
       });
+      return;
     }
   } else {
-    const user = users.find((us) => us.id == userId)
+    const user = users.find((us) => us.id == userId);
     if (user == null || user.balances.stock < quantity) {
       res.json({
         ok: false,
         msg: `⚠️ Not enough quantity.`,
       });
+      return;
     }
   }
 
@@ -180,7 +157,8 @@ function fillOrders(
 ): number {
   let remainingQuantity = quantity;
 
-  if (side === "bid") { // buys
+  if (side === "bid") {
+    // buys
     for (let i = asks.length - 1; i >= 0; i--) {
       if (asks[i].price <= price) {
         if (asks[i].quantity > remainingQuantity) {
@@ -194,7 +172,8 @@ function fillOrders(
         }
       }
     }
-  } else { // sells
+  } else {
+    // sells
     for (let i = bids.length - 1; i >= 0; i--) {
       if (bids[i].price >= price) {
         if (bids[i].quantity > remainingQuantity) {

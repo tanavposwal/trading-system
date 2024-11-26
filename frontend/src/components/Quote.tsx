@@ -16,7 +16,7 @@ const Quote = () => {
     }
 
     fetchUsers();
-    const interval = setInterval(fetchUsers, 1000);
+    const interval = setInterval(fetchUsers, 5000);
 
     return () => clearInterval(interval);
   }, []);

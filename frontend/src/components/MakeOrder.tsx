@@ -12,6 +12,7 @@ const MakeOrder = () => {
   
     const handleSubmit = async (e: any) => {
       e.preventDefault();
+      console.log("fetch")
       try {
         const res = await axios.post('http://localhost:3000/api/makeorder', {
           side: formData.side,
@@ -19,6 +20,7 @@ const MakeOrder = () => {
           quantity: Number(formData.quantity),
           userId: formData.userId,
         });
+        console.log("fetch")
         if (res.data.ok) {
           setMessage('Order submitted successfully!');
           setFormData({ side: 'bid', price: '', quantity: '', userId: '' });

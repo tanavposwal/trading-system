@@ -1,0 +1,42 @@
+[
+    {
+      "id": "1",
+      "name": "Jack Spparow",
+      "balances": {
+        "stock": 20,
+        "cash": 50000
+      }
+    },
+    {
+      "id": "2",
+      "name": "Harry Potter",
+      "balances": {
+        "stock": 20,
+        "cash": 50000
+      }
+    },
+    {
+      "id": "3",
+      "name": "Tony Stark",
+      "balances": {
+        "stock": 20,
+        "cash": 50000
+      }
+    },
+    {
+      "id": "4",
+      "name": "Steve Rogers",
+      "balances": {
+        "stock": 20,
+        "cash": 50000
+      }
+    },
+    {
+      "id": "5",
+      "name": "Peter Parker",
+      "balances": {
+        "stock": 20,
+        "cash": 50000
+      }
+    }
+]
