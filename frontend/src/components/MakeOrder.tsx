@@ -33,21 +33,10 @@ const MakeOrder = () => {
     };
   
     return (
-      <div className="flex flex-col items-center justify-center gap-3 w-full">
+      <div className="flex flex-col items-center justify-center gap-2 w-full border-l border-r pb-5 pt-2">
         <p className="text-xl font-bold">Make order</p>
-        <form onSubmit={handleSubmit} className="space-y-2 rounded-lg p-3">
-          <div>
-            <label className="block mb-1 font-semibold text-xs">Side:</label>
-            <select
-              name="side"
-              value={formData.side}
-              onChange={(e) => setFormData({...formData, side: e.target.value})}
-              className="w-full p-1 border rounded"
-            >
-              <option value="bid">Bid</option>
-              <option value="ask">Ask</option>
-            </select>
-          </div>
+        <form onSubmit={handleSubmit} className="px-6 w-full flex flex-col gap-3">
+          <div className="w-full flex gap-3">
           <div>
             <label className="block mb-1 font-semibold text-xs">Price:</label>
             <input
@@ -55,7 +44,7 @@ const MakeOrder = () => {
               name="price"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
-              className="w-full px-2 py-1 border rounded"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
               required
             />
           </div>
@@ -66,9 +55,10 @@ const MakeOrder = () => {
               name="quantity"
               value={formData.quantity}
               onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-              className="w-full px-2 py-1 border rounded"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
               required
             />
+          </div>
           </div>
           <div>
             <label className="block mb-1 font-semibold text-xs">User ID:</label>
@@ -77,13 +67,14 @@ const MakeOrder = () => {
               name="userId"
               value={formData.userId}
               onChange={(e) => setFormData({...formData, userId: e.target.value})}
-              className="w-full px-2 py-1 border rounded"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
               required
             />
           </div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-            Submit Order
-          </button>
+          <div className="w-full flex gap-3 mt-1">
+            <button className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm">BID</button>
+            <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm">ASK</button>
+          </div>
         </form>
         {message && (
           <div>{message}</div>

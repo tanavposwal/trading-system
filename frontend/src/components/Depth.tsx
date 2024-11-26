@@ -63,7 +63,7 @@ const Depth = () => {
   if (loading) return <div className="text-center py-4">Loading order book...</div>;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-6 pt-2 border-l">
       <p className="text-xl font-bold text-center">Depth</p>
       <caption className="text-xs text-gray-500 mb-3">refresh every 1 seconds</caption>
       <div className="flex justify-center items-start w-full h-[60vh] overflow-y-auto">

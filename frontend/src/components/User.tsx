@@ -18,10 +18,10 @@ const UserComponent = () => {
   }, []);
 
   return (
-    <div className="m-5 flex flex-col items-center justify-center gap-3">
+    <div className="px-5 pt-3 flex flex-col items-center justify-center gap-3 border-l border-t border-r">
       <p className="text-xl font-bold">User</p>
 
-      <table className="w-fit text-sm text-left rtl:text-right text-gray-600">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-600 max-h-[30vh] overflow-y-auto">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th className="px-6 py-3">Name</th>
