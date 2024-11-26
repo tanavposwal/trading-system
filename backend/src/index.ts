@@ -1,92 +1,81 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
-import cors from "cors"
+import cors from "cors";
+import { Order, Orderbook, User, UserOrder } from "./types";
 
 export const app = express();
-app.use(cors())
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-interface Balances {
-  [key: string]: number;
-}
-
-interface User {
-  id: string;
-  name: string;
-  balances: Balances;
-}
-
-interface Order {
-  userId: string;
-  price: number;
-  quantity: number;
-}
-
-interface AnonyOrder {
-  price: number;
-  size: number;
-}
-
-// only google
-export const TICKER = "GOOGLE";
-
-interface orderbook {
-  asks: AnonyOrder[];
-  bids: AnonyOrder[];
-}
-
-let orderbook: orderbook = {
+const orderbook: Orderbook = {
   asks: [],
   bids: [],
 };
+
+const bids: Order[] = [];
+const asks: Order[] = [];
 
 const users: User[] = [
   {
     id: "1",
     name: "Jack Spparow",
     balances: {
-      GOOGLE: 5,
-      USD: 50000,
+      stock: 5,
+      cash: 50000,
     },
   },
   {
     id: "2",
     name: "Harry Potter",
     balances: {
-      GOOGLE: 10,
-      USD: 50000,
+      stock: 10,
+      cash: 50000,
     },
   },
   {
     id: "3",
     name: "Tony Stark",
     balances: {
-      GOOGLE: 15,
-      USD: 50000,
+      stock: 15,
+      cash: 50000,
     },
   },
 ];
 
-const bids: Order[] = [];
-const asks: Order[] = [];
 
 // Place a limit order
-app.post("/order", (req: Request, res: Response) => {
-  const side: "bid" | "ask" = req.body.side;
-  const price: number = req.body.price;
-  const quantity: number = req.body.quantity;
-  const userId: string = req.body.userId;
+app.post("/api/makeorder", (req: Request, res: Response) => {
+  const {side, price, quantity, userId}: UserOrder = req.body;
+
+  // check for enough balance
+  if (side == "bid") {
+    const user = users.find((us) => us.id == userId)
+    if (user == null || user.balances.cash < price) {
+      res.json({
+        ok: false,
+        msg: `⚠️ Not enough cash.`,
+      });
+    }
+  } else {
+    const user = users.find((us) => us.id == userId)
+    if (user == null || user.balances.stock < quantity) {
+      res.json({
+        ok: false,
+        msg: `⚠️ Not enough quantity.`,
+      });
+    }
+  }
 
   // settle order and return remainQuantity which is not settled
   const remainingQty = fillOrders(side, price, quantity, userId);
 
   if (remainingQty === 0) {
     res.json({
+      ok: true,
       msg: `number of quantity filled with orderbook are ${quantity}.`,
     });
-    return;
   }
 
   if (side === "bid") {
@@ -104,16 +93,10 @@ app.post("/order", (req: Request, res: Response) => {
     });
     asks.sort((a, b) => (a.price < b.price ? 1 : -1));
   }
-
-  res.json({
-    msg: `number of quantity filled with orderbook are ${
-      quantity - remainingQty
-    }, numeber of quantity marked in orderbook are ${remainingQty}`,
-  });
 });
 
 // it is just an orderbook
-app.get("/depth", (req: Request, res: Response) => {
+app.get("/api/depth", (req: Request, res: Response) => {
   orderbook.bids = [];
   orderbook.asks = [];
 
@@ -156,38 +139,23 @@ app.get("/depth", (req: Request, res: Response) => {
   });
 });
 
-app.get("/users", (req: Request, res: Response) => {
-  res.json(users)
-})
-
-app.get("/balance/:userId", (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const user = users.find((x) => x.id === userId);
-  if (!user) {
-    return res.json({
-      USD: 0,
-      [TICKER]: 0,
-    });
-  }
-  res.json({ balances: user.balances });
+app.get("/data/users", (req: Request, res: Response) => {
+  res.json(users);
 });
 
-app.get("/quote", (req: Request, res: Response) => {
-  // TODO: Assignment
+app.get("/api/quote", (req: Request, res: Response) => {
   if (orderbook.asks.length != 0 && orderbook.bids.length != 0) {
     res.json({
       ok: true,
-      [TICKER]: (orderbook.asks[0].price + orderbook.bids[0].price) / 2,
+      stock: (orderbook.asks[0].price + orderbook.bids[0].price) / 2,
     });
   } else {
     res.json({
       ok: false,
-      msg: "trade not started",
+      msg: "Trade not started!",
     });
   }
 });
-
-app.listen(3000, () => console.log("listening on port http://localhost:3000/"));
 
 function flipBalance(
   userId1: string,
@@ -195,15 +163,13 @@ function flipBalance(
   quantity: number,
   price: number
 ) {
-  let user1 = users.find((x) => x.id === userId1);
-  let user2 = users.find((x) => x.id === userId2);
-  if (!user1 || !user2) {
-    return;
-  }
-  user1.balances[TICKER] -= quantity;
-  user2.balances[TICKER] += quantity;
-  user1.balances["USD"] += quantity * price;
-  user2.balances["USD"] -= quantity * price;
+  let u1 = users.find((x) => x.id === userId1);
+  let u2 = users.find((x) => x.id === userId2);
+  if (!u1 || !u2) return;
+  u1.balances.stock -= quantity;
+  u2.balances.stock += quantity;
+  u1.balances.cash += quantity * price;
+  u2.balances.cash -= quantity * price;
 }
 
 function fillOrders(
@@ -214,8 +180,7 @@ function fillOrders(
 ): number {
   let remainingQuantity = quantity;
 
-  if (side === "bid") {
-    // iterate over asks
+  if (side === "bid") { // buys
     for (let i = asks.length - 1; i >= 0; i--) {
       if (asks[i].price <= price) {
         if (asks[i].quantity > remainingQuantity) {
@@ -229,7 +194,7 @@ function fillOrders(
         }
       }
     }
-  } else {
+  } else { // sells
     for (let i = bids.length - 1; i >= 0; i--) {
       if (bids[i].price >= price) {
         if (bids[i].quantity > remainingQuantity) {
@@ -247,3 +212,5 @@ function fillOrders(
 
   return remainingQuantity;
 }
+
+app.listen(3000, () => console.log("listening on port http://localhost:3000/"));

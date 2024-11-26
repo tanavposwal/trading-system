@@ -6,7 +6,7 @@ const UserComponent = () => {
   
   const [users, setUsers] = useState<UserType[]>([])
   useEffect(() => {
-    axios.get("http://localhost:3000/users").then((res) => {
+    axios.get("http://localhost:3000/data/users").then((res) => {
       setUsers(res.data);
     });
   })
@@ -15,7 +15,7 @@ const UserComponent = () => {
     <div className="m-5 flex flex-col items-center justify-center gap-3">
       <p className="text-xl font-bold">User</p>
 
-      <table className="w-full text-sm text-left rtl:text-right text-gray-600">
+      <table className="w-fit text-sm text-left rtl:text-right text-gray-600">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th className="px-6 py-3">Name</th>

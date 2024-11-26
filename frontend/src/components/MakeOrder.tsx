@@ -13,13 +13,18 @@ const MakeOrder = () => {
     const handleSubmit = async (e: any) => {
       e.preventDefault();
       try {
-        await axios.post('http://localhost:3000/order', {
-          ...formData,
+        const res = await axios.post('http://localhost:3000/api/makeorder', {
+          side: formData.side,
           price: Number(formData.price),
           quantity: Number(formData.quantity),
+          userId: formData.userId,
         });
-        setMessage('Order submitted successfully!');
-        setFormData({ side: 'bid', price: '', quantity: '', userId: '' });
+        if (res.data.ok) {
+          setMessage('Order submitted successfully!');
+          setFormData({ side: 'bid', price: '', quantity: '', userId: '' });
+        } else {
+          setMessage(res.data.msg)
+        }
       } catch (error) {
         setMessage('Failed to submit order. Please try again.');
       }
