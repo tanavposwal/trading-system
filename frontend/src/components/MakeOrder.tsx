@@ -72,8 +72,8 @@ const MakeOrder = () => {
             />
           </div>
           <div className="w-full flex gap-3 mt-1">
-            <button className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm">BID</button>
-            <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm">ASK</button>
+            <button className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm" onClick={() => formData.side = "bid"}>BUY (bid)</button>
+            <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm" onClick={() => formData.side = "ask"}>SELL (ask)</button>
           </div>
         </form>
         {message && (

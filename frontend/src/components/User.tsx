@@ -12,7 +12,7 @@ const UserComponent = () => {
     }
 
     fetchUsers();
-    const interval = setInterval(fetchUsers, 20000);
+    const interval = setInterval(fetchUsers, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -33,8 +33,8 @@ const UserComponent = () => {
           {users.map((user) => (
             <tr key={user.id+user.balances.stock} className="bg-white border-b">
               <td className="px-6 py-4">{user.name}</td>
-              <td className="px-6 py-4">{user.balances.cash}</td>
-              <td className="px-6 py-4">${user.balances.stock}</td>
+              <td className="px-6 py-4">{user.balances.stock}</td>
+              <td className="px-6 py-4">${user.balances.cash}</td>
             </tr>
           ))}
         </tbody>
