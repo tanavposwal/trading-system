@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const MakeOrder = () => {
     const [formData, setFormData] = useState({
@@ -8,7 +9,6 @@ const MakeOrder = () => {
       quantity: '',
       userId: ''
     });
-    const [message, setMessage] = useState('');
   
     const handleSubmit = async (e: any) => {
       e.preventDefault();
@@ -22,13 +22,13 @@ const MakeOrder = () => {
         });
         console.log("fetch")
         if (res.data.ok) {
-          setMessage('Order submitted successfully!');
+          toast.success("Order submitted successfully!")
           setFormData({ side: 'bid', price: '', quantity: '', userId: '' });
         } else {
-          setMessage(res.data.msg)
+          toast.info(res.data.msg)
         }
       } catch (error) {
-        setMessage('Failed to submit order. Please try again.');
+        toast.warning("Network busy.")
       }
     };
   
@@ -76,9 +76,6 @@ const MakeOrder = () => {
             <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm" onClick={() => formData.side = "ask"}>SELL (ask)</button>
           </div>
         </form>
-        {message && (
-          <div>{message}</div>
-        )}
       </div>
     );
   };

@@ -2,6 +2,7 @@ import Depth from './components/Depth'
 import MakeOrder from './components/MakeOrder'
 import Quote from './components/Quote'
 import UserComponent from './components/User'
+import { Toaster } from 'sonner'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <UserComponent />
       </div>
       </div>
+      <Toaster />
     </main>
   )
 }
