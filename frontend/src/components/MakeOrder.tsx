@@ -44,7 +44,7 @@ const MakeOrder = () => {
               name="price"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
-              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-hidden shadow-xs"
               required
             />
           </div>
@@ -55,7 +55,7 @@ const MakeOrder = () => {
               name="quantity"
               value={formData.quantity}
               onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-hidden shadow-xs"
               required
             />
           </div>
@@ -67,13 +67,13 @@ const MakeOrder = () => {
               name="userId"
               value={formData.userId}
               onChange={(e) => setFormData({...formData, userId: e.target.value})}
-              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-none shadow-sm"
+              className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-hidden shadow-xs"
               required
             />
           </div>
           <div className="w-full flex gap-3 mt-1">
-            <button className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm" onClick={() => formData.side = "bid"}>BUY (bid)</button>
-            <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-sm" onClick={() => formData.side = "ask"}>SELL (ask)</button>
+            <button className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-xs" onClick={() => formData.side = "bid"}>BUY (bid)</button>
+            <button className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:scale-95 transition-transform shadow-xs" onClick={() => formData.side = "ask"}>SELL (ask)</button>
           </div>
         </form>
       </div>
