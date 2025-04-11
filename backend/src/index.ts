@@ -11,13 +11,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const orderbook: Orderbook = {
-  "asks": [],
-  "bids": []
-}
+  asks: [],
+  bids: [],
+};
 
-const users: User[] = JSON.parse(fs.readFileSync("./data/users.json", "utf-8"));
-const bids: Order[] = JSON.parse(fs.readFileSync("./data/bids.json", "utf-8"));
-const asks: Order[] = JSON.parse(fs.readFileSync("./data/asks.json", "utf-8"));
+const users: User[] = JSON.parse(
+  fs.readFileSync("./storage/users.json", "utf-8")
+);
+const bids: Order[] = JSON.parse(
+  fs.readFileSync("./storage/bids.json", "utf-8")
+);
+const asks: Order[] = JSON.parse(
+  fs.readFileSync("./storage/asks.json", "utf-8")
+);
 
 // Place a limit order
 app.post("/api/makeorder", (req: Request, res: Response) => {
@@ -45,7 +51,7 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
 
   // settle order and return remainQuantity which is not settled
   const remainingQty = fillOrders(side, price, quantity, userId);
-  fs.writeFileSync("./data/users.json", JSON.stringify(users));
+  fs.writeFileSync("./storage/users.json", JSON.stringify(users));
   if (remainingQty === 0) {
     res.json({
       ok: true,
@@ -60,7 +66,7 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
       quantity: remainingQty,
     });
     bids.sort((a, b) => (a.price < b.price ? -1 : 1));
-    fs.writeFileSync("./data/bids.json", JSON.stringify(bids));
+    fs.writeFileSync("./storage/bids.json", JSON.stringify(bids));
   } else {
     asks.push({
       userId,
@@ -68,7 +74,7 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
       quantity: remainingQty,
     });
     asks.sort((a, b) => (a.price < b.price ? 1 : -1));
-    fs.writeFileSync("./data/asks.json", JSON.stringify(asks));
+    fs.writeFileSync("./storage/asks.json", JSON.stringify(asks));
   }
 });
 
