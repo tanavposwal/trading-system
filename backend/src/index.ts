@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Order, Orderbook, User, UserOrder } from "./types";
-import * as fs from "fs";
 
 export const app = express();
 app.use(cors());
@@ -15,15 +14,34 @@ const orderbook: Orderbook = {
   bids: [],
 };
 
-const users: User[] = JSON.parse(
-  fs.readFileSync("./storage/users.json", "utf-8")
-);
-const bids: Order[] = JSON.parse(
-  fs.readFileSync("./storage/bids.json", "utf-8")
-);
-const asks: Order[] = JSON.parse(
-  fs.readFileSync("./storage/asks.json", "utf-8")
-);
+const users: User[] = [
+  {
+    id: "1",
+    name: "user1",
+    balances: {
+      cash: 1000,
+      stock: 15,
+    },
+  },
+  {
+    id: "2",
+    name: "user2",
+    balances: {
+      cash: 1000,
+      stock: 7,
+    },
+  },
+  {
+    id: "3",
+    name: "user3",
+    balances: {
+      cash: 1000,
+      stock: 10,
+    },
+  },
+];
+const bids: Order[] = [];
+const asks: Order[] = [];
 
 // Place a limit order
 app.post("/api/makeorder", (req: Request, res: Response) => {
@@ -51,7 +69,6 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
 
   // settle order and return remainQuantity which is not settled
   const remainingQty = fillOrders(side, price, quantity, userId);
-  fs.writeFileSync("./storage/users.json", JSON.stringify(users));
   if (remainingQty === 0) {
     res.json({
       ok: true,
@@ -66,7 +83,6 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
       quantity: remainingQty,
     });
     bids.sort((a, b) => (a.price < b.price ? -1 : 1));
-    fs.writeFileSync("./storage/bids.json", JSON.stringify(bids));
   } else {
     asks.push({
       userId,
@@ -74,7 +90,6 @@ app.post("/api/makeorder", (req: Request, res: Response) => {
       quantity: remainingQty,
     });
     asks.sort((a, b) => (a.price < b.price ? 1 : -1));
-    fs.writeFileSync("./storage/asks.json", JSON.stringify(asks));
   }
 });
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 const UserComponent = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -18,8 +19,8 @@ const UserComponent = () => {
   }, []);
 
   return (
-    <div className="px-5 pt-3 flex flex-col items-center justify-center gap-3 border-l border-t border-r">
-      <p className="text-xl font-bold">User</p>
+    <div className="flex flex-col items-center justify-center gap-3 border rounded-xl">
+      <p className="text-xl mt-3 font-bold">User</p>
 
       <table className="w-full text-sm text-left rtl:text-right text-gray-600 max-h-[30vh] overflow-y-auto">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -31,8 +32,12 @@ const UserComponent = () => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id+user.balances.stock} className="bg-white border-b">
-              <td className="px-6 py-4">{user.name}</td>
+            <tr
+              key={user.id + user.balances.stock}
+              className="bg-white not-last:border-b">
+              <td className="px-6 py-4 underline">
+                <Link to={"/user/" + user.id}>{user.name}</Link>
+              </td>
               <td className="px-6 py-4">{user.balances.stock}</td>
               <td className="px-6 py-4">${user.balances.cash}</td>
             </tr>

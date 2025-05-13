@@ -44,8 +44,7 @@ const Depth = () => {
         key={order.price}
         className={`relative bg-white border-b font-semibold text-sm ${
           side === "ask" ? "bg-red-100" : "bg-green-100"
-        }`}
-      >
+        }`}>
         {side === "ask" ? (
           <>
             <td className="w-40">
@@ -54,8 +53,7 @@ const Depth = () => {
                 style={{
                   width: `${percentage}%`,
                   right: 0,
-                }}
-              ></div>
+                }}></div>
             </td>
             <td className="px-6 py-2">{order.size}</td>
             <td className={`px-6 py-2 ${textColor}`}>${order.price}</td>
@@ -70,8 +68,7 @@ const Depth = () => {
                 style={{
                   width: `${percentage}%`,
                   left: 0,
-                }}
-              ></div>
+                }}></div>
             </td>
           </>
         )}
@@ -83,11 +80,8 @@ const Depth = () => {
     return <div className="text-center py-4">Loading order book...</div>;
 
   return (
-    <div className="flex flex-col px-6 pt-2 border-l">
+    <div className="flex flex-col px-6 pt-2">
       <p className="text-xl font-bold text-center">Depth</p>
-      <caption className="text-xs text-gray-500 mb-3">
-        refresh every 1 seconds
-      </caption>
       <div className="flex justify-center items-start w-full h-[60vh] overflow-y-auto">
         {/* Sell Orders (Asks) */}
         <table className="">
