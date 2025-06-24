@@ -3,11 +3,11 @@ import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 
-const UserComponent = () => {
+const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
   useEffect(() => {
     function fetchUsers() {
-      axios.get("http://localhost:3000/data/users").then((res) => {
+      axios.get("http://localhost:3000/users").then((res) => {
         setUsers(res.data);
       });
     }
@@ -19,33 +19,51 @@ const UserComponent = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 border rounded-xl">
-      <p className="text-xl mt-3 font-bold">User</p>
-
-      <table className="w-full text-sm text-left rtl:text-right text-gray-600 max-h-[30vh] overflow-y-auto">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th className="px-6 py-3">Name</th>
-            <th className="px-6 py-3">Portfolio</th>
-            <th className="px-6 py-3">Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr
-              key={user.id + user.balances.stock}
-              className="bg-white not-last:border-b">
-              <td className="px-6 py-4 underline">
-                <Link to={"/user/" + user.id}>{user.name}</Link>
-              </td>
-              <td className="px-6 py-4">{user.balances.stock}</td>
-              <td className="px-6 py-4">${user.balances.cash}</td>
+    <div className="bg-gray-800 text-white p-4 rounded-lg w-full shadow-lg">
+      <h2 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">
+        Users
+      </h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left text-gray-400">
+          <thead className="text-xs text-gray-300 uppercase bg-gray-700">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Stock Holdings
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Cash Balance
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <Link
+                    to="/user/$id"
+                    params={{ id: user.id }}
+                    className="hover:underline">
+                    {user.name}
+                  </Link>
+                </th>
+                <td className="px-6 py-4 font-mono">{user.balances.stock}</td>
+                <td className="px-6 py-4 font-mono">
+                  ${user.balances.cash.toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-export default UserComponent;
+export default UserList;

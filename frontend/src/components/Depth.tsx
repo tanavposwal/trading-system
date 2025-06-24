@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
-import axios from "axios";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
@@ -8,22 +7,34 @@ const Depth = () => {
 
   // Fetch data from API
   useEffect(() => {
-    const fetchOrderBook = async () => {
+    const ws = new WebSocket("ws://localhost:3000");
+
+    ws.onopen = () => {
+      setLoading(false);
+    };
+
+    ws.onmessage = (event) => {
       try {
-        const response = await axios.get("http://localhost:3000/api/depth");
-        setOrderBook(response.data.orderbook);
-        setLoading(false);
+        const message = JSON.parse(event.data);
+        if (message.type === "orderbook") {
+          setOrderBook(message.data);
+          if (loading) setLoading(false);
+        }
       } catch (error) {
-        console.error("Error fetching order book:", error);
-        setLoading(false);
+        console.error("Error parsing message:", error);
       }
     };
 
-    fetchOrderBook();
-    const interval = setInterval(fetchOrderBook, 1000);
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      setLoading(false);
+    };
 
-    return () => clearInterval(interval);
-  }, []);
+    // Clean up the connection when the component unmounts
+    return () => {
+      ws.close();
+    };
+  }, [loading]);
 
   // Find the maximum order size for percentage bars
   const maxOrderSize = useMemo(() => {

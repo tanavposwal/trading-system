@@ -54,44 +54,49 @@ app.get("/users", (req: Request, res: Response) => {
   res.json(users);
 });
 
+app.get("/quote", (req: Request, res: Response) => {
+  if (orderbook.asks.length != 0 && orderbook.bids.length != 0) {
+    res.send(
+      JSON.stringify({
+        ok: true,
+        data: (orderbook.asks[0].price + orderbook.bids[0].price) / 2,
+      })
+    );
+  } else {
+    res.send(
+      JSON.stringify({
+        ok: false,
+        data: "Trade not started!",
+      })
+    );
+  }
+});
+
+app.get("/orderbook", (req: Request, res: Response) => {
+  res.json({
+    ok: true,
+    data: orderbook,
+  });
+});
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
-  // console.log("Client connected via WebSocket");
-  ws.send("Welcome from FYNC exchange!");
+  console.log("Client connected via WebSocket");
+  // Send initial orderbook state
+  ws.send(JSON.stringify({ type: "orderbook", data: orderbook }));
+});
 
-  ws.on("message", (message) => {
-    try {
-      const msg = JSON.parse(message.toString());
-      console.log("Received:", msg);
-      if (msg.type === "connect:orderbook") {
-        // Handle orderbook connection
-        ws.send(JSON.stringify({ type: "orderbook", data: orderbook }));
-      } else if (msg.type === "connect:quote") {
-        // Handle quote connection
-        if (orderbook.asks.length != 0 && orderbook.bids.length != 0) {
-          ws.send(
-            JSON.stringify({
-              type: "quote",
-              data: (orderbook.asks[0].price + orderbook.bids[0].price) / 2,
-            })
-          );
-        } else {
-          ws.send(
-            JSON.stringify({
-              type: "quote",
-              data: "Trade not started!",
-            })
-          );
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      ws.send(JSON.stringify({ type: "error", message: "Invalid JSON" }));
+// Broadcast orderbook to all clients every second
+setInterval(() => {
+  const message = JSON.stringify({ type: "orderbook", data: orderbook });
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
     }
   });
-});
+}, 5000);
 
 server.listen(3000, () =>
   console.log(`listening on port http://localhost:3000/`)

@@ -6,7 +6,7 @@ const Balance = ({ userId }: { userId: string }) => {
   const [info, setInfo] = useState<UserType | null>(null);
   useEffect(() => {
     function fetchUsers() {
-      axios.get("http://localhost:3000/data/users").then((res) => {
+      axios.get("http://localhost:3000/users").then((res) => {
         res.data.forEach((user: any) => {
           if (user.id === userId) {
             setInfo(user);
@@ -16,15 +16,30 @@ const Balance = ({ userId }: { userId: string }) => {
     }
 
     fetchUsers();
-  }, []);
+  }, [userId]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 w-full border rounded-xl py-2">
-      {info && (
-        <div>
-          <p className="text-lg">${info!.balances.cash}</p>
-          <p className="text-lg">stocks - {info!.balances.stock}</p>
+    <div className="bg-gray-800 text-white p-4 rounded-lg w-full shadow-lg">
+      <h2 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">
+        Balance
+      </h2>
+      {info ? (
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-400">Cash</span>
+            <span className="text-lg font-mono bg-gray-700 px-2 py-1 rounded">
+              ${info.balances.cash.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-400">Stock Holdings</span>
+            <span className="text-lg font-mono bg-gray-700 px-2 py-1 rounded">
+              {info.balances.stock}
+            </span>
+          </div>
         </div>
+      ) : (
+        <div className="text-center text-gray-500">Loading balance...</div>
       )}
     </div>
   );

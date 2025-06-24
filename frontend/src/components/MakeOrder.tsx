@@ -14,7 +14,7 @@ const MakeOrder = ({ userId }: { userId: string }) => {
     e.preventDefault();
     console.log("fetch");
     try {
-      const res = await axios.post("http://localhost:3000/api/makeorder", {
+      const res = await axios.post("http://localhost:3000/trade/makeorder", {
         side: formData.side,
         price: Number(formData.price),
         quantity: Number(formData.quantity),

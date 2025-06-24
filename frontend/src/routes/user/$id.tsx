@@ -14,8 +14,8 @@ function RouteComponent() {
       <div className="flex items-start justify-center">
         <Depth />
         <div className="flex-col space-y-3">
-          <MakeOrder userId={id} />
           <Balance userId={id} />
+          <MakeOrder userId={id} />
         </div>
       </div>
     </div>
