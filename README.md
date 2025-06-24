@@ -8,4 +8,4 @@
 
 - [ ] User authentication
 - [ ] Saving user states
-- [-] Redis for storing orderbook
+- [x] Redis for storing orderbook
