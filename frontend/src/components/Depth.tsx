@@ -3,38 +3,54 @@ import { Orderbook, AnonyOrder } from "../types";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch data from API
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000");
+    let ws: WebSocket;
 
-    ws.onopen = () => {
-      setLoading(false);
+    const connectToWebSocket = () => {
+      ws = new WebSocket("ws://localhost:3000");
+
+      ws.onopen = () => {
+        console.log("Listening Orderbook");
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          if (message.type === "orderbook") {
+            setOrderBook(message.data);
+          }
+        } catch (error) {
+          console.error("Error parsing message:", error);
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
     };
 
-    ws.onmessage = (event) => {
+    const fetchOrderbook = async () => {
       try {
-        const message = JSON.parse(event.data);
-        if (message.type === "orderbook") {
-          setOrderBook(message.data);
-          if (loading) setLoading(false);
+        const res = await fetch("http://localhost:3000/orderbook");
+        const data = await res.json();
+        if (data.ok) {
+          setOrderBook(data.data);
         }
       } catch (error) {
-        console.error("Error parsing message:", error);
+        console.error("Failed to fetch order book", error);
+      }
+      connectToWebSocket();
+    };
+
+    fetchOrderbook();
+
+    return () => {
+      if (ws) {
+        ws.close();
       }
     };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      setLoading(false);
-    };
-
-    // Clean up the connection when the component unmounts
-    return () => {
-      ws.close();
-    };
-  }, [loading]);
+  }, []);
 
   // Find the maximum order size for percentage bars
   const maxOrderSize = useMemo(() => {
@@ -86,9 +102,6 @@ const Depth = () => {
       </tr>
     );
   };
-
-  if (loading)
-    return <div className="text-center py-4">Loading order book...</div>;
 
   return (
     <div className="flex flex-col px-6 pt-2">

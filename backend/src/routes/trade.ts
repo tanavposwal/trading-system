@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { Order, Orderbook, User, UserOrder } from "../types";
-import { orderbook, users, bids, asks } from "../index";
+import { orderbook, users, bids, asks, sendOrderbook } from "../index";
 
 const router = Router();
 
@@ -26,9 +26,7 @@ router.post("/makeorder", (req: Request, res: Response) => {
     }
   } else {
     const user = users.find((us) => us.id == userId);
-    console.log(users, userId);
     if (!user || user!.balances.stock < quantity) {
-      console.log(user?.balances.stock, quantity);
       res.json({
         ok: false,
         msg: `⚠️ Not enough quantity.`,
@@ -65,6 +63,7 @@ router.post("/makeorder", (req: Request, res: Response) => {
   }
 
   updateOrderbook();
+  sendOrderbook();
 
   res.json({
     ok: true,

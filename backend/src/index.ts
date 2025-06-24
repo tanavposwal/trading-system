@@ -87,14 +87,14 @@ wss.on("connection", (ws) => {
 });
 
 // Broadcast orderbook to all clients every second
-setInterval(() => {
+export function sendOrderbook() {
   const message = JSON.stringify({ type: "orderbook", data: orderbook });
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);
     }
   });
-}, 5000);
+}
 
 server.listen(3000, () =>
   console.log(`listening on port http://localhost:3000/`)
