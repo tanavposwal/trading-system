@@ -84,8 +84,6 @@ const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
   console.log("Client connected via WebSocket");
-  // Send initial orderbook state
-  ws.send(JSON.stringify({ type: "orderbook", data: orderbook }));
 });
 
 // Broadcast orderbook to all clients every second

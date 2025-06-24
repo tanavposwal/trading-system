@@ -1,28 +1,36 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { User as UserType } from "../types";
+import { RefreshCcw } from "lucide-react";
 
 const Balance = ({ userId }: { userId: string }) => {
   const [info, setInfo] = useState<UserType | null>(null);
-  useEffect(() => {
-    function fetchUsers() {
-      axios.get("http://localhost:3000/users").then((res) => {
-        res.data.forEach((user: any) => {
-          if (user.id === userId) {
-            setInfo(user);
-          }
-        });
-      });
-    }
 
+  function fetchUsers() {
+    axios.get("http://localhost:3000/users").then((res) => {
+      res.data.forEach((user: any) => {
+        if (user.id === userId) {
+          setInfo(user);
+        }
+      });
+    });
+  }
+
+  useEffect(() => {
     fetchUsers();
-  }, [userId]);
+    console.log("user comp re");
+  }, []);
 
   return (
     <div className="bg-gray-800 text-white p-4 rounded-lg w-full shadow-lg">
-      <h2 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">
-        Balance
-      </h2>
+      <div className="mb-4 border-b border-gray-700 pb-2 flex">
+        <h2 className="text-lg font-semibold">Balance</h2>
+        <button
+          onClick={() => fetchUsers()}
+          className="cursor-pointer hover:opacity-70 ml-2">
+          <RefreshCcw className="w-5 h-5" />
+        </button>
+      </div>
       {info ? (
         <div className="space-y-3">
           <div className="flex justify-between items-center">

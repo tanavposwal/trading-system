@@ -12,13 +12,13 @@ const MakeOrder = ({ userId }: { userId: string }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("fetch");
+    console.log("fetch", userId);
     try {
       const res = await axios.post("http://localhost:3000/trade/makeorder", {
         side: formData.side,
         price: Number(formData.price),
         quantity: Number(formData.quantity),
-        userId: formData.userId,
+        userId: Number(userId),
       });
       console.log("fetch");
       if (res.data.ok) {
