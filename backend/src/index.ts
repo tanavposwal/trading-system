@@ -6,6 +6,7 @@ import http from "http";
 import { Order, Orderbook, User, UserOrder } from "./types";
 import tradeRoutes from "./routes/trade";
 import authRoutes from "./routes/auth";
+import { createClient } from "redis";
 
 export const app = express();
 app.use(cors());
@@ -16,10 +17,15 @@ app.use(bodyParser.json());
 app.use("/trade", tradeRoutes);
 app.use("/auth", authRoutes);
 
-export const orderbook: Orderbook = {
-  asks: [],
-  bids: [],
-};
+export const redisClient = createClient();
+redisClient
+  .connect()
+  .then(() => {
+    console.log("Connected to Redis");
+  })
+  .catch((err: unknown) => {
+    console.error("Redis connection error:", err);
+  });
 
 export const users: User[] = [
   {
@@ -47,36 +53,55 @@ export const users: User[] = [
     },
   },
 ];
-export const bids: Order[] = [];
-export const asks: Order[] = [];
 
 app.get("/users", (req: Request, res: Response) => {
   res.json(users);
 });
 
-app.get("/quote", (req: Request, res: Response) => {
-  if (orderbook.asks.length != 0 && orderbook.bids.length != 0) {
-    res.send(
-      JSON.stringify({
-        ok: true,
-        data: (orderbook.asks[0].price + orderbook.bids[0].price) / 2,
-      })
-    );
-  } else {
-    res.send(
-      JSON.stringify({
-        ok: false,
-        data: "Trade not started!",
-      })
-    );
+app.get("/quote", async (req: Request, res: Response) => {
+  try {
+    const asks = await redisClient.lRange("orderbook:asks", 0, -1);
+    const bids = await redisClient.lRange("orderbook:bids", 0, -1);
+    if (asks.length !== 0 && bids.length !== 0) {
+      const bestAsk = JSON.parse(asks[0]);
+      const bestBid = JSON.parse(bids[0]);
+      res.send(
+        JSON.stringify({
+          ok: true,
+          data: (bestAsk.price + bestBid.price) / 2,
+        })
+      );
+    } else {
+      res.send(
+        JSON.stringify({
+          ok: false,
+          data: "Trade not started!",
+        })
+      );
+    }
+  } catch (err: any) {
+    res
+      .status(500)
+      .json({ ok: false, error: "Failed to fetch quote from Redis" });
   }
 });
 
-app.get("/orderbook", (req: Request, res: Response) => {
-  res.json({
-    ok: true,
-    data: orderbook,
-  });
+app.get("/orderbook", async (req: Request, res: Response) => {
+  try {
+    const asks = await redisClient.lRange("orderbook:asks", 0, -1);
+    const bids = await redisClient.lRange("orderbook:bids", 0, -1);
+    res.json({
+      ok: true,
+      data: {
+        asks: asks.map((a) => JSON.parse(a)),
+        bids: bids.map((b) => JSON.parse(b)),
+      },
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ ok: false, error: "Failed to fetch orderbook from Redis" });
+  }
 });
 
 const server = http.createServer(app);
@@ -87,13 +112,25 @@ wss.on("connection", (ws) => {
 });
 
 // Broadcast orderbook to all clients every second
-export function sendOrderbook() {
-  const message = JSON.stringify({ type: "orderbook", data: orderbook });
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
+export async function sendOrderbook() {
+  try {
+    const asks = await redisClient.lRange("orderbook:asks", 0, -1);
+    const bids = await redisClient.lRange("orderbook:bids", 0, -1);
+    const message = JSON.stringify({
+      type: "orderbook",
+      data: {
+        asks: asks.map((a) => JSON.parse(a)),
+        bids: bids.map((b) => JSON.parse(b)),
+      },
+    });
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  } catch (err: any) {
+    console.error("Failed to broadcast orderbook from Redis", err);
+  }
 }
 
 server.listen(3000, () =>
