@@ -1,81 +1,111 @@
+// Required shadcn/ui components: card, tabs, button, input, label
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const MakeOrder = ({ userId }: { userId: string }) => {
-  const [formData, setFormData] = useState({
-    side: "bid",
-    price: "",
-    quantity: "",
-    userId,
-  });
+  const [side, setSide] = useState<"bid" | "ask">("bid");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("fetch", userId);
+    setLoading(true);
     try {
       const res = await axios.post("http://localhost:3000/trade/makeorder", {
-        side: formData.side,
-        price: Number(formData.price),
-        quantity: Number(formData.quantity),
+        side,
+        price: Number(price),
+        quantity: Number(quantity),
         userId: Number(userId),
       });
-      console.log("fetch");
       if (res.data.ok) {
         toast.success("Order submitted successfully!");
-        setFormData({ side: "bid", price: "", quantity: "", userId: "" });
+        setPrice("");
+        setQuantity("");
       } else {
         toast.info(res.data.msg);
       }
     } catch (error) {
       toast.warning("Network busy.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 w-full border rounded-xl pb-5 pt-2">
-      <p className="text-xl font-bold my-3">Make order</p>
-      <form onSubmit={handleSubmit} className="px-6 w-full flex flex-col gap-3">
-        <div>
-          <label className="block mb-1 font-semibold text-xs">Price:</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={(e) =>
-              setFormData({ ...formData, price: e.target.value })
-            }
-            className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-hidden shadow-xs"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-1 font-semibold text-xs">Quantity:</label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
-            className="w-full px-3 py-1 border rounded-md focus:border-black transition-colors outline-hidden shadow-xs"
-            required
-          />
-        </div>
-        <div className="w-full flex gap-3 mt-1">
-          <button
-            className="flex flex-1 bg-green-500 items-center justify-center py-2 rounded-md text-white font-bold hover:bg-green-600 transition-transform shadow-xs cursor-pointer"
-            onClick={() => (formData.side = "bid")}>
-            BUY (bid)
-          </button>
-          <button
-            className="flex flex-1 bg-red-500 items-center justify-center py-2 rounded-md text-white font-bold hover:bg-red-600 transition-transform shadow-xs cursor-pointer"
-            onClick={() => (formData.side = "ask")}>
-            SELL (ask)
-          </button>
-        </div>
-      </form>
-    </div>
+    <Card className="w-full max-w-md mx-auto shadow-lg border rounded-xl">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold text-center">
+          Make Order
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs
+          value={side}
+          onValueChange={(v: string) => setSide(v as "bid" | "ask")}
+          className="mb-4">
+          <TabsList className="w-full grid grid-cols-2">
+            <TabsTrigger
+              value="bid"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              BUY (Bid)
+            </TabsTrigger>
+            <TabsTrigger
+              value="ask"
+              className="data-[state=active]:bg-red-500 data-[state=active]:text-white">
+              SELL (Ask)
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="price">Price</Label>
+            <Input
+              id="price"
+              type="number"
+              min="0"
+              step="any"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter price"
+              required
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="quantity">Quantity</Label>
+            <Input
+              id="quantity"
+              type="number"
+              min="0"
+              step="any"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Enter quantity"
+              required
+              className="mt-1"
+            />
+          </div>
+          <Button
+            type="submit"
+            className={`w-full font-bold py-2 mt-2 ${side === "bid" ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}`}
+            disabled={loading || !price || !quantity}>
+            {loading
+              ? "Placing Order..."
+              : side === "bid"
+                ? "Place Buy Order"
+                : "Place Sell Order"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
+
 export default MakeOrder;
