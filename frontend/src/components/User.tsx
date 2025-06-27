@@ -2,12 +2,6 @@ import axios from "axios";
 import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -27,7 +21,7 @@ const UserList = () => {
   return (
     <div className="">
       <div className="py-4">
-        <CardTitle className="text-lg font-bold text-center">Users</CardTitle>
+        <h2 className="text-lg font-bold text-center">Users</h2>
       </div>
       <div className="overflow-x-auto p-0">
         <table className="w-full text-sm text-left">
@@ -59,9 +53,9 @@ const UserList = () => {
                     {user.name}
                   </Link>
                 </th>
-                <td className="px-6 py-4 font-mono">{user.balances.stock}</td>
+                <td className="px-6 py-4 font-mono">{user.stock}</td>
                 <td className="px-6 py-4 font-mono">
-                  ${user.balances.cash.toLocaleString()}
+                  ${user.cash.toLocaleString()}
                 </td>
               </tr>
             ))}

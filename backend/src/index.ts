@@ -9,6 +9,7 @@ import tradeRoutes from "./routes/trade";
 import express, { Request, Response } from "express";
 import { db } from "./db";
 import { users } from "./schema";
+import { eq } from "drizzle-orm";
 
 dotenv.config();
 export const app = express();
@@ -32,9 +33,19 @@ redisClient
     console.error("Redis connection error:", err);
   });
 
-app.get("/users", (req: Request, res: Response) => {
-  const data = db.select().from(users);
+app.get("/users", async (req: Request, res: Response) => {
+  const data = await db.select().from(users);
   res.json(data);
+});
+
+app.get("/user/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const row = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, Number(id)));
+  const user = row[0];
+  res.json(user);
 });
 
 app.get("/quote", async (req: Request, res: Response) => {

@@ -1,12 +1,8 @@
-export interface Balances {
-  stock: number;
-  cash: number;
-}
-
 export interface User {
   id: string;
   name: string;
-  balances: Balances;
+  stock: number;
+  cash: number;
 }
 
 export interface Order {

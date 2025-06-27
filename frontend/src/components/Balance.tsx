@@ -8,12 +8,9 @@ const Balance = ({ userId }: { userId: string }) => {
   const [info, setInfo] = useState<UserType | null>(null);
 
   function fetchUsers() {
-    axios.get("http://localhost:3000/users").then((res) => {
-      res.data.forEach((user: any) => {
-        if (user.id === userId) {
-          setInfo(user);
-        }
-      });
+    axios.get(`http://localhost:3000/user/${userId}`).then((res) => {
+      console.log(res.data);
+      setInfo(res.data);
     });
   }
 
@@ -25,7 +22,7 @@ const Balance = ({ userId }: { userId: string }) => {
   return (
     <div className="w-full mx-auto text-card-foreground border py-4 px-6 rounded-xl">
       <div className="flex flex-row items-center justify-between pb-4">
-        <h2 className="text-lg font-semibold">Balance</h2>
+        <h2 className="text-lg font-semibold">{info?.name}</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -40,13 +37,13 @@ const Balance = ({ userId }: { userId: string }) => {
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Cash</span>
               <span className="text-md font-mono bg-muted px-3 py-1 rounded">
-                ${info.balances.cash.toLocaleString()}
+                ${info.cash.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Stock Holdings</span>
               <span className="text-md font-mono bg-muted px-3 py-1 rounded">
-                {info.balances.stock}
+                {info.stock}
               </span>
             </div>
           </div>
