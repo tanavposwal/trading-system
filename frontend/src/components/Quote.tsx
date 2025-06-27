@@ -1,7 +1,6 @@
 import axios from "axios";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
 const Quote = () => {

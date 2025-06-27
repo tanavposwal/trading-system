@@ -17,11 +17,10 @@ export interface Order {
 
 export interface AnonyOrder {
   price: number;
-  size: number;
+  quantity: number;
 }
 
 export interface Orderbook {
   asks: AnonyOrder[];
   bids: AnonyOrder[];
 }
-

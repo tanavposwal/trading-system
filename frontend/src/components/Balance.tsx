@@ -2,12 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { User as UserType } from "../types";
 import { RefreshCcw } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
 const Balance = ({ userId }: { userId: string }) => {

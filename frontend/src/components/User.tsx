@@ -25,11 +25,11 @@ const UserList = () => {
   }, []);
 
   return (
-    <Card className="w-full shadow-xl bg-card text-card-foreground">
-      <CardHeader className="pb-2 border-b border-border">
-        <CardTitle className="text-lg font-semibold">Users</CardTitle>
-      </CardHeader>
-      <CardContent className="overflow-x-auto p-0">
+    <div className="">
+      <div className="py-4">
+        <CardTitle className="text-lg font-bold text-center">Users</CardTitle>
+      </div>
+      <div className="overflow-x-auto p-0">
         <table className="w-full text-sm text-left">
           <thead className="text-xs uppercase bg-muted text-muted-foreground">
             <tr>
@@ -67,8 +67,8 @@ const UserList = () => {
             ))}
           </tbody>
         </table>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

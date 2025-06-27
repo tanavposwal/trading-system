@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
@@ -29,10 +23,6 @@ const Depth = () => {
         } catch (error) {
           // console.error("Error parsing message:", error);
         }
-      };
-
-      ws.onerror = (error) => {
-        // console.error("WebSocket error:", error);
       };
     };
 
@@ -62,44 +52,46 @@ const Depth = () => {
   const maxOrderSize = useMemo(() => {
     if (!orderBook) return 1;
     const allSizes = [...(orderBook.asks || []), ...(orderBook.bids || [])].map(
-      (order) => order.size
+      (order) => order.quantity
     );
     return Math.max(...allSizes, 1);
   }, [orderBook]);
 
   const renderOrderRow = (order: AnonyOrder, side: "ask" | "bid") => {
-    const percentage = (order.size / maxOrderSize) * 100;
-    const bgColor = side === "ask" ? "bg-destructive" : "bg-green-600";
+    const percentage = (order.quantity / maxOrderSize) * 100;
+    const bgColor = side === "ask" ? "bg-red-400/20" : "bg-green-600/20";
     const barSide = side === "ask" ? "right-0" : "left-0";
-    const textColor = side === "ask" ? "text-destructive" : "text-green-400";
-    const barOpacity = "opacity-20";
-    const rowBg = side === "ask" ? "bg-destructive/5" : "bg-green-900/10";
+    const textColor = side === "ask" ? "text-red-400" : "text-green-400";
 
     return (
       <tr
         key={order.price}
-        className={`relative font-semibold text-sm ${rowBg} border-b border-border`}>
+        className={`relative font-semibold text-sm border-b border-border`}>
         {side === "ask" ? (
           <>
             <td className="w-32 relative p-0">
               <div
-                className={`absolute top-0 bottom-0 ${bgColor} ${barOpacity} ${barSide} h-full rounded-l-md`}
+                className={`absolute top-0 bottom-0 ${bgColor} ${barSide} h-full rounded-l-md`}
                 style={{ width: `${percentage}%` }}></div>
             </td>
-            <td className="px-4 py-2 relative z-10">{order.size}</td>
-            <td className={`px-4 py-2 relative z-10 ${textColor}`}>
+            <td className={`px-4 py-2 relative z-10 text-white/70 ${bgColor}`}>
+              {order.quantity}
+            </td>
+            <td className={`px-4 py-2 relative z-10 ${textColor} ${bgColor}`}>
               ${order.price}
             </td>
           </>
         ) : (
           <>
-            <td className={`px-4 py-2 relative z-10 ${textColor}`}>
+            <td className={`px-4 py-2 relative z-10 ${textColor} ${bgColor}`}>
               ${order.price}
             </td>
-            <td className="px-4 py-2 relative z-10">{order.size}</td>
+            <td className={`px-4 py-2 relative z-10 text-white/70 ${bgColor}`}>
+              {order.quantity}
+            </td>
             <td className="w-32 relative p-0">
               <div
-                className={`absolute top-0 bottom-0 ${bgColor} ${barOpacity} ${barSide} h-full rounded-r-md`}
+                className={`absolute top-0 bottom-0 ${bgColor} ${barSide} h-full rounded-r-md`}
                 style={{ width: `${percentage}%` }}></div>
             </td>
           </>
@@ -110,16 +102,16 @@ const Depth = () => {
 
   return (
     <div>
-      <div className="py-2">
+      <div className="py-4">
         <h2 className="text-xl font-bold text-center">Depth</h2>
       </div>
       <div className="flex flex-col items-center px-2">
         <div className="flex flex-row w-full justify-center items-start h-[60vh] overflow-y-auto">
           {/* Sell Orders (Asks) */}
-          <table className="min-w-[260px] text-sm overflow-hidden">
+          <table className="min-w-[300px] text-sm overflow-hidden">
             <thead>
               <tr className="text-xs uppercase bg-muted text-muted-foreground">
-                <th className="w-32"></th>
+                <th className="w-16"></th>
                 <th className="px-4 py-2">Size</th>
                 <th className="px-4 py-2">Sell (Ask)</th>
               </tr>
@@ -147,7 +139,7 @@ const Depth = () => {
               <tr className="text-xs uppercase bg-muted text-muted-foreground">
                 <th className="px-4 py-2">Buy (Bid)</th>
                 <th className="px-4 py-2">Size</th>
-                <th className="w-32"></th>
+                <th className="w-16"></th>
               </tr>
             </thead>
             <tbody>
