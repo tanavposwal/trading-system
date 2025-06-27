@@ -4,10 +4,11 @@ import { redisClient, sendOrderbook } from "../index";
 import { db } from "../db";
 import { users } from "../schema";
 import { eq, sql } from "drizzle-orm";
+import auth from "../middlware/jwt";
 
 const router = Router();
 
-router.get("/echo", (req: Request, res: Response) => {
+router.get("/echo", auth, (req: Request, res: Response) => {
   res.json({
     ok: true,
     msg: "echo success",
@@ -15,7 +16,7 @@ router.get("/echo", (req: Request, res: Response) => {
 });
 
 // Place a limit order
-router.post("/makeorder", async (req: Request, res: Response) => {
+router.post("/makeorder", auth, async (req: Request, res: Response) => {
   const { side, price, quantity, userId }: UserOrder = req.body;
   const userRow = await db
     .select()

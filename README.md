@@ -7,5 +7,8 @@
 ## Task
 
 - [ ] User authentication
-- [ ] Saving user states
+- [x] Saving user states
 - [x] Redis for storing orderbook
+- [ ] trade history
+- [ ] recent trades
+- [ ] charting
