@@ -22,18 +22,18 @@ const Quote = () => {
   }, []);
 
   return (
-    <Card className="w-full max-w-xs mx-auto mb-4 bg-card text-card-foreground shadow-md">
-      <CardContent className="flex items-center justify-center gap-2 py-4">
-        <p className="text-2xl font-bold font-mono tracking-tight">{price}</p>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={fetchQuote}
-          aria-label="Refresh quote">
-          <RefreshCcw className="w-5 h-5" />
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="flex gap-2 items-center justify-center">
+      <p className="text-lg font-bold font-mono tracking-tight">
+        Market Price: {price}
+      </p>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={fetchQuote}
+        aria-label="Refresh quote">
+        <RefreshCcw className="w-5 h-5" />
+      </Button>
+    </div>
   );
 };
 

@@ -109,14 +109,14 @@ const Depth = () => {
   };
 
   return (
-    <Card className="w-full h-full shadow-xl bg-card text-card-foreground">
-      <CardHeader className="pb-2 border-b border-border">
-        <CardTitle className="text-xl font-bold text-center">Depth</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center px-2 pt-2">
-        <div className="flex flex-row gap-8 w-full justify-center items-start h-[60vh] overflow-y-auto">
+    <div>
+      <div className="py-2">
+        <h2 className="text-xl font-bold text-center">Depth</h2>
+      </div>
+      <div className="flex flex-col items-center px-2">
+        <div className="flex flex-row w-full justify-center items-start h-[60vh] overflow-y-auto">
           {/* Sell Orders (Asks) */}
-          <table className="min-w-[260px] text-sm rounded-lg overflow-hidden">
+          <table className="min-w-[260px] text-sm overflow-hidden">
             <thead>
               <tr className="text-xs uppercase bg-muted text-muted-foreground">
                 <th className="w-32"></th>
@@ -133,7 +133,7 @@ const Depth = () => {
                 <tr>
                   <td
                     colSpan={3}
-                    className="text-center py-2 text-muted-foreground">
+                    className="text-center py-2 text-muted-foreground/50">
                     No ask orders available
                   </td>
                 </tr>
@@ -142,7 +142,7 @@ const Depth = () => {
           </table>
 
           {/* Buy Orders (Bids) */}
-          <table className="min-w-[260px] text-sm rounded-lg overflow-hidden">
+          <table className="min-w-[260px] text-sm overflow-hidden">
             <thead>
               <tr className="text-xs uppercase bg-muted text-muted-foreground">
                 <th className="px-4 py-2">Buy (Bid)</th>
@@ -159,7 +159,7 @@ const Depth = () => {
                 <tr>
                   <td
                     colSpan={3}
-                    className="text-center py-2 text-muted-foreground">
+                    className="text-center py-2 text-muted-foreground/50">
                     No bid orders available
                   </td>
                 </tr>
@@ -167,8 +167,8 @@ const Depth = () => {
             </tbody>
           </table>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

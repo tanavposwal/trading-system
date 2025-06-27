@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const MakeOrder = ({ userId }: { userId: string }) => {
@@ -13,6 +13,23 @@ const MakeOrder = ({ userId }: { userId: string }) => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [loading, setLoading] = useState(false);
+  const [quotePrice, setQuotePrice] = useState<string>("");
+
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/quote`);
+        if (res.data.ok) {
+          setQuotePrice(res.data.data);
+        } else {
+          setQuotePrice("");
+        }
+      } catch (err) {
+        setQuotePrice("");
+      }
+    };
+    fetchQuote();
+  }, [side]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,13 +56,11 @@ const MakeOrder = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-xl bg-card text-card-foreground border border-border rounded-xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold text-center">
-          Make Order
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="w-full mx-auto text-card-foreground border py-4 px-6 rounded-xl">
+      <div className="pb-4">
+        <h2 className="text-xl font-bold text-center">Make Order</h2>
+      </div>
+      <div>
         <Tabs
           value={side}
           onValueChange={(v: string) => setSide(v as "bid" | "ask")}
@@ -66,17 +81,45 @@ const MakeOrder = ({ userId }: { userId: string }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              type="number"
-              min="0"
-              step="any"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Enter price"
-              required
-              className="mt-1"
-            />
+            <div className="flex gap-2 items-center">
+              <Input
+                id="price"
+                type="number"
+                min="0"
+                step="any"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Enter price"
+                required
+                className="mt-1 flex-1"
+              />
+            </div>
+            {quotePrice && (
+              <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
+                <span>Market Price:</span>
+                <span className="font-mono font-semibold text-base text-primary">
+                  {quotePrice}
+                </span>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (quotePrice) {
+                      // Format to 6 decimals if it's a number
+                      const formatted = isNaN(Number(quotePrice))
+                        ? quotePrice
+                        : Number(quotePrice).toFixed(6).replace(/\.0+$/, "");
+                      setPrice(formatted);
+                    }
+                  }}
+                  className="ml-1 text-primary text-xs font-medium"
+                  title="Set as order price"
+                  variant="outline"
+                  size="sm"
+                  aria-label="Set as order price">
+                  Set
+                </Button>
+              </div>
+            )}
           </div>
           <div>
             <Label htmlFor="quantity">Quantity</Label>
@@ -107,8 +150,8 @@ const MakeOrder = ({ userId }: { userId: string }) => {
                 : "Place Sell Order"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

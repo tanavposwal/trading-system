@@ -11,9 +11,9 @@ function RouteComponent() {
   const { id } = Route.useParams();
   return (
     <div>
-      <div className="flex items-start justify-center">
+      <div className="flex items-start justify-center w-full">
         <Depth />
-        <div className="flex-col space-y-3">
+        <div className="flex-col space-y-3 mt-6">
           <Balance userId={id} />
           <MakeOrder userId={id} />
         </div>
