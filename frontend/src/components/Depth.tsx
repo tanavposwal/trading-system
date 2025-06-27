@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
@@ -11,7 +17,7 @@ const Depth = () => {
       ws = new WebSocket("ws://localhost:3000");
 
       ws.onopen = () => {
-        console.log("Listening Orderbook");
+        // console.log("Listening Orderbook");
       };
 
       ws.onmessage = (event) => {
@@ -21,12 +27,12 @@ const Depth = () => {
             setOrderBook(message.data);
           }
         } catch (error) {
-          console.error("Error parsing message:", error);
+          // console.error("Error parsing message:", error);
         }
       };
 
       ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
+        // console.error("WebSocket error:", error);
       };
     };
 
@@ -38,7 +44,7 @@ const Depth = () => {
           setOrderBook(data.data);
         }
       } catch (error) {
-        console.error("Failed to fetch order book", error);
+        // console.error("Failed to fetch order book", error);
       }
       connectToWebSocket();
     };
@@ -63,39 +69,38 @@ const Depth = () => {
 
   const renderOrderRow = (order: AnonyOrder, side: "ask" | "bid") => {
     const percentage = (order.size / maxOrderSize) * 100;
-    const bgColor = side === "ask" ? "bg-red-400" : "bg-green-400";
-    const textColor = side === "ask" ? "text-red-700" : "text-green-700";
+    const bgColor = side === "ask" ? "bg-destructive" : "bg-green-600";
+    const barSide = side === "ask" ? "right-0" : "left-0";
+    const textColor = side === "ask" ? "text-destructive" : "text-green-400";
+    const barOpacity = "opacity-20";
+    const rowBg = side === "ask" ? "bg-destructive/5" : "bg-green-900/10";
 
     return (
       <tr
         key={order.price}
-        className={`relative bg-white border-b font-semibold text-sm ${
-          side === "ask" ? "bg-red-100" : "bg-green-100"
-        }`}>
+        className={`relative font-semibold text-sm ${rowBg} border-b border-border`}>
         {side === "ask" ? (
           <>
-            <td className="w-40">
+            <td className="w-32 relative p-0">
               <div
-                className={`absolute top-0 bottom-0 ${bgColor} opacity-20`}
-                style={{
-                  width: `${percentage}%`,
-                  right: 0,
-                }}></div>
+                className={`absolute top-0 bottom-0 ${bgColor} ${barOpacity} ${barSide} h-full rounded-l-md`}
+                style={{ width: `${percentage}%` }}></div>
             </td>
-            <td className="px-6 py-2">{order.size}</td>
-            <td className={`px-6 py-2 ${textColor}`}>${order.price}</td>
+            <td className="px-4 py-2 relative z-10">{order.size}</td>
+            <td className={`px-4 py-2 relative z-10 ${textColor}`}>
+              ${order.price}
+            </td>
           </>
         ) : (
           <>
-            <td className={`px-6 py-2 ${textColor}`}>${order.price}</td>
-            <td className="px-6 py-2">{order.size}</td>
-            <td className="w-40">
+            <td className={`px-4 py-2 relative z-10 ${textColor}`}>
+              ${order.price}
+            </td>
+            <td className="px-4 py-2 relative z-10">{order.size}</td>
+            <td className="w-32 relative p-0">
               <div
-                className={`absolute top-0 bottom-0 ${bgColor} opacity-20`}
-                style={{
-                  width: `${percentage}%`,
-                  left: 0,
-                }}></div>
+                className={`absolute top-0 bottom-0 ${bgColor} ${barOpacity} ${barSide} h-full rounded-r-md`}
+                style={{ width: `${percentage}%` }}></div>
             </td>
           </>
         )}
@@ -104,54 +109,66 @@ const Depth = () => {
   };
 
   return (
-    <div className="flex flex-col px-6 pt-2">
-      <p className="text-xl font-bold text-center">Depth</p>
-      <div className="flex justify-center items-start w-full h-[60vh] overflow-y-auto">
-        {/* Sell Orders (Asks) */}
-        <table className="">
-          <thead>
-            <tr className="text-xs text-gray-700 uppercase bg-gray-50">
-              <th className="w-32"></th>
-              <th className="px-6 py-3">Size</th>
-              <th className="px-6 py-3">Sell (Ask)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderBook?.asks
-              .slice(0, 10)
-              .map((ask) => renderOrderRow(ask, "ask")) || (
-              <tr>
-                <td colSpan={3} className="text-center py-2">
-                  No ask orders available
-                </td>
+    <Card className="w-full h-full shadow-xl bg-card text-card-foreground">
+      <CardHeader className="pb-2 border-b border-border">
+        <CardTitle className="text-xl font-bold text-center">Depth</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center px-2 pt-2">
+        <div className="flex flex-row gap-8 w-full justify-center items-start h-[60vh] overflow-y-auto">
+          {/* Sell Orders (Asks) */}
+          <table className="min-w-[260px] text-sm rounded-lg overflow-hidden">
+            <thead>
+              <tr className="text-xs uppercase bg-muted text-muted-foreground">
+                <th className="w-32"></th>
+                <th className="px-4 py-2">Size</th>
+                <th className="px-4 py-2">Sell (Ask)</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orderBook?.asks?.length ? (
+                orderBook.asks
+                  .slice(0, 10)
+                  .map((ask) => renderOrderRow(ask, "ask"))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="text-center py-2 text-muted-foreground">
+                    No ask orders available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
-        {/* Buy Orders (Bids) */}
-        <table>
-          <thead>
-            <tr className="text-xs text-gray-700 uppercase bg-gray-50">
-              <th className="px-6 py-3">Buy (Bid)</th>
-              <th className="px-6 py-3">Size</th>
-              <th className="w-32"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderBook?.bids
-              .slice(0, 10)
-              .map((bid) => renderOrderRow(bid, "bid")) || (
-              <tr>
-                <td colSpan={3} className="text-center py-2">
-                  No bid orders available
-                </td>
+          {/* Buy Orders (Bids) */}
+          <table className="min-w-[260px] text-sm rounded-lg overflow-hidden">
+            <thead>
+              <tr className="text-xs uppercase bg-muted text-muted-foreground">
+                <th className="px-4 py-2">Buy (Bid)</th>
+                <th className="px-4 py-2">Size</th>
+                <th className="w-32"></th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </thead>
+            <tbody>
+              {orderBook?.bids?.length ? (
+                orderBook.bids
+                  .slice(0, 10)
+                  .map((bid) => renderOrderRow(bid, "bid"))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="text-center py-2 text-muted-foreground">
+                    No bid orders available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

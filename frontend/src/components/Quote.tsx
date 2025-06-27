@@ -1,6 +1,8 @@
 import axios from "axios";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 const Quote = () => {
   const [price, setPrice] = useState<any>();
@@ -20,14 +22,18 @@ const Quote = () => {
   }, []);
 
   return (
-    <div className=" flex items-center justify-center gap-1 pb-5 text-gray-600">
-      <p className="text-xl font-semibold">{price}</p>
-      <button
-        onClick={() => fetchQuote()}
-        className="cursor-pointer hover:opacity-70 ml-2">
-        <RefreshCcw className="w-5 h-5" />
-      </button>
-    </div>
+    <Card className="w-full max-w-xs mx-auto mb-4 bg-card text-card-foreground shadow-md">
+      <CardContent className="flex items-center justify-center gap-2 py-4">
+        <p className="text-2xl font-bold font-mono tracking-tight">{price}</p>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={fetchQuote}
+          aria-label="Refresh quote">
+          <RefreshCcw className="w-5 h-5" />
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

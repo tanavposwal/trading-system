@@ -5,7 +5,7 @@ import Quote from "../components/Quote";
 
 export const Route = createRootRoute({
   component: () => (
-    <main className="min-h-screen mx-auto max-w-screen-xl">
+    <main className="min-h-screen mx-auto max-w-screen-xl dark">
       <p className="text-3xl font-black text-center pt-5">FYNC exchange</p>
       <Quote />
 

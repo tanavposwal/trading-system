@@ -2,6 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { User as UserType } from "../types";
 import { RefreshCcw } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 const Balance = ({ userId }: { userId: string }) => {
   const [info, setInfo] = useState<UserType | null>(null);
@@ -18,38 +25,45 @@ const Balance = ({ userId }: { userId: string }) => {
 
   useEffect(() => {
     fetchUsers();
-    console.log("user comp re");
+    // console.log("user comp re");
   }, []);
 
   return (
-    <div className="bg-gray-800 text-white p-4 rounded-lg w-full shadow-lg">
-      <div className="mb-4 border-b border-gray-700 pb-2 flex">
-        <h2 className="text-lg font-semibold">Balance</h2>
-        <button
-          onClick={() => fetchUsers()}
-          className="cursor-pointer hover:opacity-70 ml-2">
+    <Card className="w-full shadow-xl bg-card text-card-foreground">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border">
+        <CardTitle className="text-lg font-semibold">Balance</CardTitle>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={fetchUsers}
+          className="ml-2"
+          aria-label="Refresh balance">
           <RefreshCcw className="w-5 h-5" />
-        </button>
-      </div>
-      {info ? (
-        <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Cash</span>
-            <span className="text-lg font-mono bg-gray-700 px-2 py-1 rounded">
-              ${info.balances.cash.toLocaleString()}
-            </span>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        {info ? (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Cash</span>
+              <span className="text-lg font-mono bg-muted px-3 py-1 rounded">
+                ${info.balances.cash.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Stock Holdings</span>
+              <span className="text-lg font-mono bg-muted px-3 py-1 rounded">
+                {info.balances.stock}
+              </span>
+            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Stock Holdings</span>
-            <span className="text-lg font-mono bg-gray-700 px-2 py-1 rounded">
-              {info.balances.stock}
-            </span>
+        ) : (
+          <div className="text-center text-muted-foreground">
+            Loading balance...
           </div>
-        </div>
-      ) : (
-        <div className="text-center text-gray-500">Loading balance...</div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

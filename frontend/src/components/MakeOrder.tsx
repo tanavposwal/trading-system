@@ -39,7 +39,7 @@ const MakeOrder = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border rounded-xl">
+    <Card className="w-full max-w-md mx-auto shadow-xl bg-card text-card-foreground border border-border rounded-xl">
       <CardHeader>
         <CardTitle className="text-xl font-bold text-center">
           Make Order
@@ -53,12 +53,12 @@ const MakeOrder = ({ userId }: { userId: string }) => {
           <TabsList className="w-full grid grid-cols-2">
             <TabsTrigger
               value="bid"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-l-md">
               BUY (Bid)
             </TabsTrigger>
             <TabsTrigger
               value="ask"
-              className="data-[state=active]:bg-red-500 data-[state=active]:text-white">
+              className="data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground rounded-r-md">
               SELL (Ask)
             </TabsTrigger>
           </TabsList>
@@ -94,7 +94,11 @@ const MakeOrder = ({ userId }: { userId: string }) => {
           </div>
           <Button
             type="submit"
-            className={`w-full font-bold py-2 mt-2 ${side === "bid" ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}`}
+            className={`w-full font-bold py-2 mt-2 ${
+              side === "bid"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            }`}
             disabled={loading || !price || !quantity}>
             {loading
               ? "Placing Order..."

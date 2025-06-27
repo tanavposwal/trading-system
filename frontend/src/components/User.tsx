@@ -2,6 +2,12 @@ import axios from "axios";
 import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -19,21 +25,21 @@ const UserList = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800 text-white p-4 rounded-lg w-full shadow-lg">
-      <h2 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">
-        Users
-      </h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-gray-400">
-          <thead className="text-xs text-gray-300 uppercase bg-gray-700">
+    <Card className="w-full shadow-xl bg-card text-card-foreground">
+      <CardHeader className="pb-2 border-b border-border">
+        <CardTitle className="text-lg font-semibold">Users</CardTitle>
+      </CardHeader>
+      <CardContent className="overflow-x-auto p-0">
+        <table className="w-full text-sm text-left">
+          <thead className="text-xs uppercase bg-muted text-muted-foreground">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 font-semibold">
                 Name
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 font-semibold">
                 Stock Holdings
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 font-semibold">
                 Cash Balance
               </th>
             </tr>
@@ -42,14 +48,14 @@ const UserList = () => {
             {users.map((user) => (
               <tr
                 key={user.id}
-                className="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                className="border-b border-border hover:bg-muted/60 transition-colors">
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  className="px-6 py-4 font-medium text-foreground whitespace-nowrap">
                   <Link
                     to="/user/$id"
                     params={{ id: user.id }}
-                    className="hover:underline">
+                    className="hover:underline text-primary">
                     {user.name}
                   </Link>
                 </th>
@@ -61,8 +67,8 @@ const UserList = () => {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
