@@ -14,7 +14,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
       return res
         .status(403)
         .json({ ok: false, msg: "Token invalid or expired" });
-    (req as any).email = user.email; // payload from JWT
+    req.body.email = user.email; // payload from JWT
     next();
   });
 }

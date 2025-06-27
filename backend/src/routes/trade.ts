@@ -17,12 +17,13 @@ router.get("/echo", auth, (req: Request, res: Response) => {
 
 // Place a limit order
 router.post("/makeorder", auth, async (req: Request, res: Response) => {
-  const { side, price, quantity, userId }: UserOrder = req.body;
+  const { side, price, quantity }: UserOrder = req.body;
   const userRow = await db
     .select()
     .from(users)
-    .where(eq(users.id, Number(userId)));
+    .where(eq(users.email, req.body.email));
   const userData = userRow[0];
+  const userId = userData.id;
 
   // check for enough balance
   if (side == "bid") {
@@ -84,7 +85,7 @@ async function fillOrders(
   side: string,
   price: number,
   quantity: number,
-  userId: string
+  userId: number
 ): Promise<number> {
   let remainingQuantity = quantity;
   if (side === "bid") {
@@ -136,8 +137,8 @@ async function fillOrders(
 }
 
 async function flipBalance(
-  userId1: string,
-  userId2: string,
+  userId1: number,
+  userId2: number,
   quantity: number,
   price: number
 ) {
