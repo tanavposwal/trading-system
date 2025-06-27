@@ -1,23 +1,27 @@
-import express, { Request, Response } from "express";
-import bodyParser from "body-parser";
+import http from "http";
 import cors from "cors";
 import WebSocket from "ws";
-import http from "http";
-import { Order, Orderbook, User, UserOrder } from "./types";
-import tradeRoutes from "./routes/trade";
-import authRoutes from "./routes/auth";
+import dotenv from "dotenv";
 import { createClient } from "redis";
+import bodyParser from "body-parser";
+import authRoutes from "./routes/auth";
+import tradeRoutes from "./routes/trade";
+import express, { Request, Response } from "express";
+import { Order, Orderbook, User, UserOrder } from "./types";
 
+dotenv.config();
 export const app = express();
 app.use(cors());
-
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/trade", tradeRoutes);
 app.use("/auth", authRoutes);
 
-export const redisClient = createClient();
+export const redisClient = createClient({
+  url: process.env.REDIS_URL,
+});
+
 redisClient
   .connect()
   .then(() => {
