@@ -1,6 +1,9 @@
 import { Router, Request, Response } from "express";
-import { Order, User, UserOrder } from "../types";
-import { users, redisClient, sendOrderbook } from "../index";
+import { UserOrder } from "../types";
+import { redisClient, sendOrderbook } from "../index";
+import { db } from "../db";
+import { users } from "../schema";
+import { eq, sql } from "drizzle-orm";
 
 const router = Router();
 
@@ -14,10 +17,15 @@ router.get("/echo", (req: Request, res: Response) => {
 // Place a limit order
 router.post("/makeorder", async (req: Request, res: Response) => {
   const { side, price, quantity, userId }: UserOrder = req.body;
+  const userRow = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, Number(userId)));
+  const userData = userRow[0];
+
   // check for enough balance
-  const user = users.find((us) => us.id == userId);
   if (side == "bid") {
-    if (!user || user.balances.cash < price * quantity) {
+    if (!userData || Number(userData.cash) < price * quantity) {
       res.json({
         ok: false,
         msg: `⚠️ Not enough cash.`,
@@ -25,7 +33,7 @@ router.post("/makeorder", async (req: Request, res: Response) => {
       return;
     }
   } else {
-    if (!user || user.balances.stock < quantity) {
+    if (!userData || Number(userData.stock) < quantity) {
       res.json({
         ok: false,
         msg: `⚠️ Not enough quantity.`,
@@ -126,19 +134,29 @@ async function fillOrders(
   return remainingQuantity;
 }
 
-function flipBalance(
+async function flipBalance(
   userId1: string,
   userId2: string,
   quantity: number,
   price: number
 ) {
-  let u1 = users.find((x) => x.id === userId1);
-  let u2 = users.find((x) => x.id === userId2);
-  if (!u1 || !u2) return;
-  u1.balances.stock -= quantity;
-  u2.balances.stock += quantity;
-  u1.balances.cash += quantity * price;
-  u2.balances.cash -= quantity * price;
+  // Atomically update user1 (seller): decrease stock, increase cash
+  await db
+    .update(users)
+    .set({
+      stock: sql`${users.stock} - ${quantity}`,
+      cash: sql`${users.cash} + ${quantity * price}`,
+    })
+    .where(eq(users.id, Number(userId1)));
+
+  // Atomically update user2 (buyer): increase stock, decrease cash
+  await db
+    .update(users)
+    .set({
+      stock: sql`${users.stock} + ${quantity}`,
+      cash: sql`${users.cash} - ${quantity * price}`,
+    })
+    .where(eq(users.id, Number(userId2)));
 }
 
 export default router;

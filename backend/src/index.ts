@@ -7,7 +7,8 @@ import bodyParser from "body-parser";
 import authRoutes from "./routes/auth";
 import tradeRoutes from "./routes/trade";
 import express, { Request, Response } from "express";
-import { Order, Orderbook, User, UserOrder } from "./types";
+import { db } from "./db";
+import { users } from "./schema";
 
 dotenv.config();
 export const app = express();
@@ -31,35 +32,9 @@ redisClient
     console.error("Redis connection error:", err);
   });
 
-export const users: User[] = [
-  {
-    id: "1",
-    name: "user1",
-    balances: {
-      cash: 1000,
-      stock: 15,
-    },
-  },
-  {
-    id: "2",
-    name: "user2",
-    balances: {
-      cash: 1000,
-      stock: 7,
-    },
-  },
-  {
-    id: "3",
-    name: "user3",
-    balances: {
-      cash: 1000,
-      stock: 10,
-    },
-  },
-];
-
 app.get("/users", (req: Request, res: Response) => {
-  res.json(users);
+  const data = db.select().from(users);
+  res.json(data);
 });
 
 app.get("/quote", async (req: Request, res: Response) => {
