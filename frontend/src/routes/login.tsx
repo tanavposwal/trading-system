@@ -14,6 +14,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { apiURL } from "./__root";
+import { Nav } from "@/components/Navbar";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
@@ -49,6 +50,7 @@ function RouteComponent() {
 
   return (
     <div className="flex items-center justify-center min-h-[60vh] w-full">
+      <Nav />
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-center">Login</CardTitle>

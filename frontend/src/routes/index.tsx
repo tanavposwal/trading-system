@@ -1,3 +1,4 @@
+import { Nav } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen">
+      <Nav />
       {/* Hero Section */}
       <section className="px-6 py-20">
         <div className="max-w-7xl mx-auto text-center">

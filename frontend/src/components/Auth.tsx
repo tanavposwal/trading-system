@@ -4,7 +4,8 @@ import { Button } from "./ui/button";
 export default function Auth() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  if (!token) {
+
+  if (token == "") {
     return (
       <div>
         <Button
@@ -15,6 +16,7 @@ export default function Auth() {
       </div>
     );
   }
+
   return (
     <div className="flex gap-3">
       <Button
@@ -27,7 +29,7 @@ export default function Auth() {
         variant={"destructive"}
         onClick={() => {
           localStorage.setItem("token", "");
-          navigate({ to: "/dashboard" });
+          navigate({ to: "/" });
         }}>
         Signout
       </Button>
