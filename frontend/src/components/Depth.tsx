@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
 import { apiURL, wsURL } from "@/routes/__root";
-import { BoltIcon, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
