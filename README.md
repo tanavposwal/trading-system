@@ -2,7 +2,7 @@
 
 > Tech stack - vite + express
 
-![image](https://github.com/user-attachments/assets/c0020f00-dce5-4d96-8b5f-157495856b26)
+![image](https://github.com/user-attachments/assets/bfde9e9e-6456-4e66-add1-be71bbcb700b)
 
 ## Task
 
