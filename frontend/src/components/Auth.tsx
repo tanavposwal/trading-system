@@ -10,7 +10,7 @@ export default function Auth() {
       <div>
         <Button
           asChild
-          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white outline-none">
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white outline-none">
           <Link to="/login">Login</Link>
         </Button>
       </div>
@@ -20,9 +20,8 @@ export default function Auth() {
   return (
     <div className="flex gap-3">
       <Button
-        variant={"outline"}
         asChild
-        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
         <Link to="/dashboard">Dashboard</Link>
       </Button>
       <Button

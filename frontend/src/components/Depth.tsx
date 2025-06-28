@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
 import { apiURL, wsURL } from "@/routes/__root";
+import { BoltIcon, Zap } from "lucide-react";
 
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
@@ -65,9 +66,7 @@ const Depth = () => {
     const textColor = side === "ask" ? "text-red-400" : "text-green-400";
 
     return (
-      <tr
-        key={order.price}
-        className={`relative font-semibold text-sm border-b border-border`}>
+      <tr key={order.price} className={`relative font-semibold text-sm`}>
         {side === "ask" ? (
           <>
             <td className="w-32 relative p-0">
@@ -103,15 +102,16 @@ const Depth = () => {
 
   return (
     <div>
-      <div className="py-4">
-        <h2 className="text-xl font-bold text-center">Depth</h2>
+      <div className="py-4 flex items-center justify-center gap-1">
+        <h2 className="text-xl font-bold">Orderbook</h2>
+        <Zap className="w-4 h-4 text-yellow-400 fill-yellow-400 mx-2 animate-bounce" />
       </div>
       <div className="flex flex-col items-center px-2">
         <div className="flex flex-row w-full justify-center items-start h-[60vh] overflow-y-auto">
           {/* Sell Orders (Asks) */}
           <table className="min-w-[300px] text-sm overflow-hidden">
             <thead>
-              <tr className="text-xs uppercase bg-muted text-muted-foreground">
+              <tr className="text-xs uppercase text-muted-foreground">
                 <th className="w-16"></th>
                 <th className="px-4 py-2">Size</th>
                 <th className="px-4 py-2">Sell (Ask)</th>
@@ -137,7 +137,7 @@ const Depth = () => {
           {/* Buy Orders (Bids) */}
           <table className="min-w-[300px] text-sm overflow-hidden">
             <thead>
-              <tr className="text-xs uppercase bg-muted text-muted-foreground">
+              <tr className="text-xs uppercase text-muted-foreground">
                 <th className="px-4 py-2">Buy (Bid)</th>
                 <th className="px-4 py-2">Size</th>
                 <th className="w-16"></th>

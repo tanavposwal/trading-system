@@ -20,7 +20,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex items-start justify-center w-full gap-4 pt-2">
+    <div className="flex items-start justify-center w-full gap-4 pt-2 min-h-screen">
       <Nav />
       <Depth />
       <div className="flex-col space-y-3 w-80">

@@ -9,23 +9,20 @@ export default function Transactions() {
   const token = localStorage.getItem("token");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  function fetchT() {
-    axios
-      .get(apiURL + "transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setTransactions(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Failed to fetch transactions");
-        setLoading(false);
-      });
+  async function fetchT() {
+    setLoading(true);
+    const res = await axios.get(apiURL + "transactions", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.data) {
+      setTransactions(res.data);
+      setLoading(false);
+      console.log("transaction comp re");
+    }
   }
 
   useEffect(() => {
@@ -39,16 +36,16 @@ export default function Transactions() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={fetchT}
+          onClick={() => fetchT()}
           aria-label="Refresh balance">
-          <RefreshCcw className="w-5 h-5" />
+          <RefreshCcw
+            className={"w-5 h-5 " + (loading ? "animate-spin" : "")}
+          />
         </Button>
       </div>
       <div>
         {loading ? (
           <div className="text-muted-foreground">Loading...</div>
-        ) : error ? (
-          <div className="text-red-500">{error}</div>
         ) : transactions.length === 0 ? (
           <div className="text-muted-foreground">No transactions found.</div>
         ) : (

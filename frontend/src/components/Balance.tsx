@@ -8,17 +8,21 @@ import { apiURL } from "@/routes/__root";
 const Balance = () => {
   const token = localStorage.getItem("token");
   const [info, setInfo] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function fetchUsers() {
-    axios
-      .get(apiURL + "me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setInfo(res.data);
-      });
+  async function fetchUsers() {
+    setLoading(true);
+    const res = await axios.get(apiURL + "me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.data) {
+      setInfo(res.data);
+      setLoading(false);
+      console.log("balance comp re");
+    }
   }
 
   useEffect(() => {
@@ -33,31 +37,33 @@ const Balance = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={fetchUsers}
+          onClick={() => fetchUsers()}
           aria-label="Refresh balance">
-          <RefreshCcw className="w-5 h-5" />
+          <RefreshCcw
+            className={"w-5 h-5 " + (loading ? "animate-spin" : "")}
+          />
         </Button>
       </div>
       <div>
-        {info ? (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Cash</span>
-              <span className="text-md font-mono bg-muted px-3 py-1 rounded">
-                ${info.cash.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Stock Holdings</span>
-              <span className="text-md font-mono bg-muted px-3 py-1 rounded">
-                {info.stock}
-              </span>
-            </div>
-          </div>
+        {loading ? (
+          <div className="text-muted-foreground">Loading...</div>
         ) : (
-          <div className="text-center text-muted-foreground">
-            Loading balance...
-          </div>
+          info && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Cash</span>
+                <span className="text-md font-mono bg-muted px-3 py-1 rounded">
+                  ${info!.cash.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Stock Holdings</span>
+                <span className="text-md font-mono bg-muted px-3 py-1 rounded">
+                  {info!.stock}
+                </span>
+              </div>
+            </div>
+          )
         )}
       </div>
     </div>
