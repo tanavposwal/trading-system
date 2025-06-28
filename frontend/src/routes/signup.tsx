@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
@@ -116,6 +117,11 @@ function RouteComponent() {
             </Button>
           </form>
         </CardContent>
+        <CardFooter>
+          <Link to="/login" className="opacity-60 underline">
+            Already a User ?
+          </Link>
+        </CardFooter>
       </Card>
     </div>
   );
