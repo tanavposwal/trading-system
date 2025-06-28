@@ -20,3 +20,12 @@ export interface Orderbook {
   asks: AnonyOrder[];
   bids: AnonyOrder[];
 }
+
+export interface Transaction {
+  id: number;
+  user_id: number;
+  type: string;
+  quantity: number;
+  price: number;
+  timestamp: string;
+}

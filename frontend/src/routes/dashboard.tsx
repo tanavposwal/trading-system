@@ -3,6 +3,7 @@ import Depth from "../components/Depth";
 import MakeOrder from "../components/MakeOrder";
 import Balance from "../components/Balance";
 import { toast } from "sonner";
+import Transactions from "@/components/Transactions";
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -18,14 +19,13 @@ function RouteComponent() {
   }
 
   return (
-    <div>
-      <div className="flex items-start justify-center w-full">
-        <Depth />
-        <div className="flex-col space-y-3 mt-6">
-          <Balance />
-          <MakeOrder />
-        </div>
+    <div className="flex items-start justify-center w-full gap-4 pt-2">
+      <Depth />
+      <div className="flex-col space-y-3 w-80">
+        <Balance />
+        <MakeOrder />
       </div>
+      <Transactions />
     </div>
   );
 }

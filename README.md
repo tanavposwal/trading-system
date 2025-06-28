@@ -9,6 +9,5 @@
 - [x] User authentication
 - [x] Saving user states
 - [x] Redis for storing orderbook
-- [ ] trade history
-- [ ] recent trades
+- [x] trade history
 - [ ] charting

@@ -8,7 +8,7 @@ import authRoutes from "./routes/auth";
 import tradeRoutes from "./routes/trade";
 import express, { Request, Response } from "express";
 import { db } from "./db";
-import { users } from "./schema";
+import { transactions, users } from "./schema";
 import { eq } from "drizzle-orm";
 import auth from "./middlware/jwt";
 
@@ -54,6 +54,17 @@ app.get("/me", auth, async (req: Request, res: Response) => {
   const row = await db.select().from(users).where(eq(users.email, email));
   const user = row[0];
   res.json(user);
+});
+
+app.get("/transactions", auth, async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const row = await db.select().from(users).where(eq(users.email, email));
+  const user = row[0];
+  const data = await db
+    .select()
+    .from(transactions)
+    .where(eq(transactions.user_id, user.id));
+  res.json(data);
 });
 
 app.get("/quote", async (req: Request, res: Response) => {

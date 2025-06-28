@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { UserOrder } from "../types";
 import { redisClient, sendOrderbook } from "../index";
 import { db } from "../db";
-import { users } from "../schema";
+import { transactions, users } from "../schema";
 import { eq, sql } from "drizzle-orm";
 import auth from "../middlware/jwt";
 
@@ -150,6 +150,14 @@ async function flipBalance(
       cash: sql`${users.cash} + ${quantity * price}`,
     })
     .where(eq(users.id, Number(userId1)));
+  // Make record in transaction history
+  await db.insert(transactions).values({
+    //@ts-ignore
+    user_id: userId1.toString(),
+    type: "sell",
+    quantity,
+    price,
+  });
 
   // Atomically update user2 (buyer): increase stock, decrease cash
   await db
@@ -159,6 +167,14 @@ async function flipBalance(
       cash: sql`${users.cash} - ${quantity * price}`,
     })
     .where(eq(users.id, Number(userId2)));
+  // Make record in transaction history
+  await db.insert(transactions).values({
+    //@ts-ignore
+    userIsd: userId2.toString(),
+    type: "buy",
+    quantity,
+    price,
+  });
 }
 
 export default router;
