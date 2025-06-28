@@ -6,6 +6,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
+const apiUrl = import.meta.env.BACKEND_URL;
+
 const MakeOrder = () => {
   const token = localStorage.getItem("token");
   const [side, setSide] = useState<"bid" | "ask">("bid");
@@ -17,7 +19,7 @@ const MakeOrder = () => {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/quote`);
+        const res = await axios.get(apiUrl + "quote");
         if (res.data.ok) {
           setQuotePrice(res.data.data);
         } else {
@@ -35,7 +37,7 @@ const MakeOrder = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/trade/makeorder",
+        apiUrl + "trade/makeorder",
         {
           side,
           price: Number(price),

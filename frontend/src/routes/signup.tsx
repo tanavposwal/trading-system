@@ -18,6 +18,8 @@ export const Route = createFileRoute("/signup")({
   component: RouteComponent,
 });
 
+const apiUrl = import.meta.env.BACKEND_URL;
+
 function RouteComponent() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +36,7 @@ function RouteComponent() {
     }
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/auth/signup", {
+      const res = await axios.post(apiUrl + "auth/signup", {
         name,
         email,
         password,

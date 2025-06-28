@@ -12,7 +12,7 @@ export const Route = createFileRoute("/dashboard")({
 function RouteComponent() {
   const token = localStorage.getItem("token");
 
-  if (!token) {
+  if (token == "") {
     Navigate({ to: "/login" });
     toast.error("Please login first");
     return null;

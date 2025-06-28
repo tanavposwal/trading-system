@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Orderbook, AnonyOrder } from "../types";
 
+const wsUrl = import.meta.env.WS_Url;
+const apiUrl = import.meta.env.BACKEND_URL;
+
 const Depth = () => {
   const [orderBook, setOrderBook] = useState<Orderbook | null>(null);
 
@@ -8,7 +11,7 @@ const Depth = () => {
     let ws: WebSocket;
 
     const connectToWebSocket = () => {
-      ws = new WebSocket("ws://localhost:3000");
+      ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
         // console.log("Listening Orderbook");
@@ -28,7 +31,7 @@ const Depth = () => {
 
     const fetchOrderbook = async () => {
       try {
-        const res = await fetch("http://localhost:3000/orderbook");
+        const res = await fetch(apiUrl + "orderbook");
         const data = await res.json();
         if (data.ok) {
           setOrderBook(data.data);

@@ -117,7 +117,7 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
-  console.log("Client connected via WebSocket");
+  // console.log("Client connected via WebSocket");
 });
 
 // Broadcast orderbook to all clients every second

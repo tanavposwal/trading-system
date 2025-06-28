@@ -7,7 +7,9 @@ export default function Auth() {
   if (!token) {
     return (
       <div>
-        <Button asChild>
+        <Button
+          asChild
+          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white outline-none">
           <Link to="/login">Login</Link>
         </Button>
       </div>
@@ -15,8 +17,11 @@ export default function Auth() {
   }
   return (
     <div className="flex gap-3">
-      <Button variant={"outline"} asChild>
-        <Link to="/login">Dashboard</Link>
+      <Button
+        variant={"outline"}
+        asChild
+        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <Link to="/dashboard">Dashboard</Link>
       </Button>
       <Button
         variant={"destructive"}

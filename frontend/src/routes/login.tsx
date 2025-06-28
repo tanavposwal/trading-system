@@ -18,6 +18,8 @@ export const Route = createFileRoute("/login")({
   component: RouteComponent,
 });
 
+const apiUrl = import.meta.env.BACKEND_URL;
+
 function RouteComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ function RouteComponent() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/auth/login", {
+      const res = await axios.post(apiUrl + "auth/login", {
         email,
         password,
       });

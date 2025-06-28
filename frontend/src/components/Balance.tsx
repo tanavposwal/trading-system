@@ -4,13 +4,15 @@ import { User as UserType } from "../types";
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../components/ui/button";
 
+const apiUrl = import.meta.env.BACKEND_URL;
+
 const Balance = () => {
   const token = localStorage.getItem("token");
   const [info, setInfo] = useState<UserType | null>(null);
 
   function fetchUsers() {
     axios
-      .get(`http://localhost:3000/me`, {
+      .get(apiUrl + "me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

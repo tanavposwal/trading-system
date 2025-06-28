@@ -4,6 +4,8 @@ import { Transaction } from "../types";
 import { Button } from "./ui/button";
 import { RefreshCcw } from "lucide-react";
 
+const apiUrl = import.meta.env.BACKEND_URL;
+
 export default function Transactions() {
   const token = localStorage.getItem("token");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -12,7 +14,7 @@ export default function Transactions() {
 
   function fetchT() {
     axios
-      .get("http://localhost:3000/transactions", {
+      .get(apiUrl + "transactions", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
