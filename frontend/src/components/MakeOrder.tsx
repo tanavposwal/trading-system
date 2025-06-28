@@ -5,8 +5,7 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-
-const apiUrl = import.meta.env.BACKEND_URL;
+import { apiURL } from "@/routes/__root";
 
 const MakeOrder = () => {
   const token = localStorage.getItem("token");
@@ -19,7 +18,7 @@ const MakeOrder = () => {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const res = await axios.get(apiUrl + "quote");
+        const res = await axios.get(apiURL + "quote");
         if (res.data.ok) {
           setQuotePrice(res.data.data);
         } else {
@@ -37,7 +36,7 @@ const MakeOrder = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        apiUrl + "trade/makeorder",
+        apiURL + "trade/makeorder",
         {
           side,
           price: Number(price),

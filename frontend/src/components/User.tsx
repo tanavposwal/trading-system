@@ -1,14 +1,13 @@
 import axios from "axios";
 import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
-
-const apiUrl = import.meta.env.BACKEND_URL;
+import { apiURL } from "@/routes/__root";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
   useEffect(() => {
     function fetchUsers() {
-      axios.get(apiUrl + "users").then((res) => {
+      axios.get(apiURL + "users").then((res) => {
         setUsers(res.data);
       });
     }

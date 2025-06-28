@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { User as UserType } from "../types";
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../components/ui/button";
-
-const apiUrl = import.meta.env.BACKEND_URL;
+import { apiURL } from "@/routes/__root";
 
 const Balance = () => {
   const token = localStorage.getItem("token");
@@ -12,7 +11,7 @@ const Balance = () => {
 
   function fetchUsers() {
     axios
-      .get(apiUrl + "me", {
+      .get(apiURL + "me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

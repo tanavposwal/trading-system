@@ -3,6 +3,9 @@ import { Toaster } from "sonner";
 import { TrendingUp } from "lucide-react";
 import Auth from "@/components/Auth";
 
+export const apiURL = import.meta.env.VITE_BACKEND_URL;
+export const wsURL = import.meta.env.VITE_WS_URL;
+
 export const Route = createRootRoute({
   component: () => (
     <div className="dark min-h-screen w-full bg-background text-foreground">

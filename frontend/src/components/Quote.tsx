@@ -2,14 +2,13 @@ import axios from "axios";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
-
-const apiUrl = import.meta.env.BACKEND_URL;
+import { apiURL } from "@/routes/__root";
 
 const Quote = () => {
   const [price, setPrice] = useState<any>();
 
   function fetchQuote() {
-    axios.get(apiUrl + "quote").then((res) => {
+    axios.get(apiURL + "quote").then((res) => {
       if (res.data.ok) {
         setPrice(res.data.data);
       } else {
