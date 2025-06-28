@@ -13,12 +13,11 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
+import { apiURL } from "./__root";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
 });
-
-const apiUrl = import.meta.env.BACKEND_URL;
 
 function RouteComponent() {
   const [name, setName] = useState("");
@@ -36,7 +35,7 @@ function RouteComponent() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(apiUrl + "auth/signup", {
+      const res = await axios.post(apiURL + "auth/signup", {
         name,
         email,
         password,

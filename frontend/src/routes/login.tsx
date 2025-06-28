@@ -13,12 +13,11 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
+import { apiURL } from "./__root";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
 });
-
-const apiUrl = import.meta.env.BACKEND_URL;
 
 function RouteComponent() {
   const [email, setEmail] = useState("");
@@ -30,7 +29,7 @@ function RouteComponent() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(apiUrl + "auth/login", {
+      const res = await axios.post(apiURL + "auth/login", {
         email,
         password,
       });

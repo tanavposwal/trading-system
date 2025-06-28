@@ -16,8 +16,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    BACKEND_URL: JSON.stringify(process.env.VITE_BACKEND_URL),
-    WS_URL: JSON.stringify(process.env.VITE_WS_URL),
-  },
 });

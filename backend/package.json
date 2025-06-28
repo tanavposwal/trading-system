@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b",
+    "generate": "npx drizzle-kit generate",
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"ts-node src/index.ts\""
   },
