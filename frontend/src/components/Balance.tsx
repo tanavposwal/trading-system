@@ -4,14 +4,20 @@ import { User as UserType } from "../types";
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../components/ui/button";
 
-const Balance = ({ userId }: { userId: string }) => {
+const Balance = () => {
+  const token = localStorage.getItem("token");
   const [info, setInfo] = useState<UserType | null>(null);
 
   function fetchUsers() {
-    axios.get(`http://localhost:3000/user/${userId}`).then((res) => {
-      console.log(res.data);
-      setInfo(res.data);
-    });
+    axios
+      .get(`http://localhost:3000/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setInfo(res.data);
+      });
   }
 
   useEffect(() => {

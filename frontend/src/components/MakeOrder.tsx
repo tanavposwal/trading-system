@@ -6,7 +6,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-const MakeOrder = ({ userId }: { userId: string }) => {
+const MakeOrder = () => {
+  const token = localStorage.getItem("token");
   const [side, setSide] = useState<"bid" | "ask">("bid");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -33,12 +34,19 @@ const MakeOrder = ({ userId }: { userId: string }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/trade/makeorder", {
-        side,
-        price: Number(price),
-        quantity: Number(quantity),
-        userId: Number(userId),
-      });
+      const res = await axios.post(
+        "http://localhost:3000/trade/makeorder",
+        {
+          side,
+          price: Number(price),
+          quantity: Number(quantity),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res.data.ok) {
         toast.success("Order submitted successfully!");
         setPrice("");
@@ -138,7 +146,7 @@ const MakeOrder = ({ userId }: { userId: string }) => {
             className={`w-full font-bold py-2 mt-2 ${
               side === "bid"
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                : "bg-red-800 text-destructive-foreground hover:bg-red-700"
             }`}
             disabled={loading || !price || !quantity}>
             {loading

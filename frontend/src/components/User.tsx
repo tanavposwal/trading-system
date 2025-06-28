@@ -1,7 +1,6 @@
 import axios from "axios";
 import { User as UserType } from "../types";
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -46,12 +45,7 @@ const UserList = () => {
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-foreground whitespace-nowrap">
-                  <Link
-                    to="/user/$id"
-                    params={{ id: user.id }}
-                    className="hover:underline text-primary">
-                    {user.name}
-                  </Link>
+                  {user.name}
                 </th>
                 <td className="px-6 py-4 font-mono">{user.stock}</td>
                 <td className="px-6 py-4 font-mono">

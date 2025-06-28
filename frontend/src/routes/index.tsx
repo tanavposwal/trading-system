@@ -1,9 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import UserComponent from "../components/User";
-import Depth from "../components/Depth";
-import Balance from "../components/Balance";
-import Quote from "../components/Quote";
-import MakeOrder from "../components/MakeOrder";
 import {
   Card,
   CardContent,
@@ -32,6 +28,7 @@ function Index() {
   return (
     <div className="max-w-2xl mx-auto">
       <UserComponent />
+      <ChartPlaceholder />
     </div>
   );
 }

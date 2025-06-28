@@ -134,7 +134,7 @@ const Depth = () => {
           </table>
 
           {/* Buy Orders (Bids) */}
-          <table className="min-w-[260px] text-sm overflow-hidden">
+          <table className="min-w-[300px] text-sm overflow-hidden">
             <thead>
               <tr className="text-xs uppercase bg-muted text-muted-foreground">
                 <th className="px-4 py-2">Buy (Bid)</th>

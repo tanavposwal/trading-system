@@ -10,6 +10,7 @@ import express, { Request, Response } from "express";
 import { db } from "./db";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
+import auth from "./middlware/jwt";
 
 dotenv.config();
 export const app = express();
@@ -44,6 +45,13 @@ app.get("/user/:id", async (req: Request, res: Response) => {
     .select()
     .from(users)
     .where(eq(users.id, Number(id)));
+  const user = row[0];
+  res.json(user);
+});
+
+app.get("/me", auth, async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const row = await db.select().from(users).where(eq(users.email, email));
   const user = row[0];
   res.json(user);
 });
